@@ -18,17 +18,25 @@
  - 변수의 유호범위(Scope)
  - this 
  
-### 실행컨텍스트는 어떻게 환경정보를 담아 모아둘까? 
+### 실행컨텍스트는 어떻게 환경정보를 담아 모아둘까? ( 😂설명마다 달라서 어려웠다 ) 
 
 > 실행컨텍스트는 '객체'이다. 총 3개의 프로퍼티를 소유하여 환경정보를 담아둔다. 
  
- - LexicalEnvironment : 함수선언, 전역변수, 지역변수, 매개변수, 객체의 프로퍼티
- - VariableEnvironment : 변수의 유효 범위
+  ES3 기준 
+ - Variable object : 함수선언, 전역변수, 지역변수, 매개변수, 객체의 프로퍼티
+ - Scope chain : 변수의 유효 범위
  - thisValue : this
+  
+  ES5 기준
+ - LexicalEnvironment : 함수선언, (진역, 전역, 매개)변수, 객체의 프로퍼티 `주로사용`  
+   └ environmentRecord : 현재 컨텍스트와 관련된 코드의 식별자 정보 저장 `호이스팅`의 원인   
+   └ outerEvironmentReference : 변수의 유효 범위 `스코프 체인`의 원인
+ - VariableEnvironment : 함수선언, (진역, 전역, 매개)변수, 객체의 프로퍼티 `처음에만 저장`  
+   └ environmentRecord : 현재 컨텍스트와 관련된 코드의 식별자 정보 저장 `호이스팅`의 원인   
+   └ outerEvironmentReference : 변수의 유효 범위 `스코프 체인`의 원인
+ - thisValue : this 
  
-추상적인 개념이라 이해하기 어려울 수 있다.
-
-
+추상적인 개념, 버전마다 다르게 구현되어 이해하기 어려울 수 있다.
 
 ### 실행컨테스트는 어떻게 동작할까? 
 ```javascript
