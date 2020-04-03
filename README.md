@@ -22,11 +22,13 @@
 
 > 실행컨텍스트는 '객체'이다. 총 3개의 프로퍼티를 소유하여 환경정보를 담아둔다. 
  
- - Variable Object : 함수선언, 전역변수, 지역변수, 매개변수, 객체의 프로퍼티
- - Scope Chain : 변수의 유효 범위
+ - LexicalEnvironment : 함수선언, 전역변수, 지역변수, 매개변수, 객체의 프로퍼티
+ - VariableEnvironment : 변수의 유효 범위
  - thisValue : this
  
 추상적인 개념이라 이해하기 어려울 수 있다.
+
+
 
 ### 실행컨테스트는 어떻게 동작할까? 
 ```javascript
