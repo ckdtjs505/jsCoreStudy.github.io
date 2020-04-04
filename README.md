@@ -1,7 +1,13 @@
 # jsCoreStudy
-자바스크립트 핵심 이해하기 
+자바스크립트 핵심 이해하기  
 
-`실행컨텍스트` `class` `this` `callback` `closure` `prototype`   
+1. [`ES버전`](https://medium.com/sjk5766/ecma-script-es-%EC%A0%95%EB%A6%AC%EC%99%80-%EB%B2%84%EC%A0%84%EB%B3%84-%ED%8A%B9%EC%A7%95-77715f696dcb)
+2. [`실행컨텍스트`](https://github.com/ckdtjs505/jsCoreStudy#%EC%8B%A4%ED%96%89%EC%BB%A8%ED%85%8D%EC%8A%A4%ED%8A%B8-execute-context)
+3. [`함수객체`](https://meetup.toast.com/posts/118), [`함수호출`](https://meetup.toast.com/posts/123)
+4. `closure`
+5. `this`
+6. `callback`
+7. `prototype`
 
 ## 실행컨텍스트 execute context 
 
