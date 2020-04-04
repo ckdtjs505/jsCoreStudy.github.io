@@ -42,23 +42,31 @@
  초기화 과정중에는 완전히 같지만, 코드 진행에 따라 LexicalEnvironment이 변하게 된다. 
  
 > 💥 중요함 !! environmentRecord 가 하는 역할은? '호이스팅'  
- environmentRecord는 현재 컨텍스트와 관련된 코드의 식별자 정보들이 저장  
- 즉 컨텍스트 내부 전체를 처음부터 끝까지 훑어가면서 순서대로 수집한다. 
+ environmentRecord는 현재 컨텍스트와 관련된 코드의 식별자 정보들을 순서대로 저장한다.  
+ 즉 컨텍스트 내부 전체를 처음부터 끝까지 훑어가면서 식별자 정보들을 순서대로 수집한다고 생각하자. 
  
 ```javascipt
 console.log(a);
 var a = 3;
 ```
-위의 코드를 보자.  
-컨텍스트가 생성되면서 VariableEnvironment.environmentRecord는 var a라는 식별자 정보를 수집한다.
+위의 코드를 보자. 컨텍스트가 생성되면서 VariableEnvironment.environmentRecord는 var a 라는 식별자 정보를 수집한다.
 
 ```javascript
 var a; // 마치 이렇게 동작하는것 처럼 보이지, 실제로 코드가 이렇게 변경되지 않는다. `주의`
 console.log(a);
 a = 3;
 ```
-이에따라 undefined 라는 결과를 출력한다. 
-즉 컨텍스트가 식별자 정보를 수집하기 때문에 호이스팅이 발생하게된다. 
+식별자 정보를 수집하게 되면 마치 위의 코드처럼 동작하게 된다.  
+이에따라 console.log(a)는 error를 출력하는것이 아닌, undefined 라는 결과를 출력한다.  
+이렇게 컨텍스트가 식별자 정보를 수집하기 때문에 생각했던 결과와는 다른 결과가 나올 수 있다.  
+
+```javascript
+console.log(b);
+function b() {};
+console.log(b);
+```
+위의 코드를 보자 첫번째 console은 error, 두번째는 f b()를 출력할 것 같다.    
+그러나 결과는 f b(), f b() 가 출력된다. 왜냐하면 지금까지 설명했던 것과 같이 함수 선언식 또한 호이스팅 되기 때문이다.  
 
 ### 실행컨테스트는 어떻게 동작할까? 
 ```javascript
