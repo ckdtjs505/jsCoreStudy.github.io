@@ -28,15 +28,37 @@
  - thisValue : this
   
   ES5 기준
- - LexicalEnvironment : 함수선언, (진역, 전역, 매개)변수, 객체의 프로퍼티 `주로사용`  
+ - LexicalEnvironment : `주로사용` 함수선언, (진역, 전역, 매개)변수, 객체의 프로퍼티   
    └ environmentRecord : 현재 컨텍스트와 관련된 코드의 식별자 정보 저장 `호이스팅`의 원인   
-   └ outerEvironmentReference : 변수의 유효 범위 `스코프 체인`의 원인
- - VariableEnvironment : 함수선언, (진역, 전역, 매개)변수, 객체의 프로퍼티 `처음에만 저장`  
-   └ environmentRecord : 현재 컨텍스트와 관련된 코드의 식별자 정보 저장 `호이스팅`의 원인   
-   └ outerEvironmentReference : 변수의 유효 범위 `스코프 체인`의 원인
- - thisValue : this 
+   └ outerEnvironmentReference : 변수의 유효 범위 `스코프 체인`의 원인  
+ - VariableEnvironment : `처음에만 저장` 함수선언, (진역, 전역, 매개)변수, 객체의 프로퍼티   
+   └ environmentRecord  
+   └ outerEnvironmentReference  
+ - thisBinding : this 
  
-추상적인 개념, 버전마다 다르게 구현되어 이해하기 어려울 수 있다.
+> 🌌 중요하지 않음 참고만!! LexicalEnvironment vs VariableEnvironmet 의 차이점은?  
+ 결론 부터 보면 LexicalEnvironment, VariableEnvironment에 담긴는 데이터가 같다.  
+ 실행 컨텍스트가 생성될때 VariableEnvironment에 먼저 정보를 담고, 이를 복사해서 LexicalEnvironment에 담는다.  
+ 초기화 과정중에는 완전히 같지만, 코드 진행에 따라 LexicalEnvironment이 변하게 된다. 
+ 
+> 💥 중요함 !! environmentRecord 가 하는 역할은? '호이스팅'  
+ environmentRecord는 현재 컨텍스트와 관련된 코드의 식별자 정보들이 저장  
+ 즉 컨텍스트 내부 전체를 처음부터 끝까지 훑어가면서 순서대로 수집한다. 
+ 
+```javascipt
+console.log(a);
+var a = 3;
+```
+위의 코드를 보자.  
+컨텍스트가 생성되면서 VariableEnvironment.environmentRecord는 var a라는 식별자 정보를 수집한다.
+
+```javascript
+var a; // 마치 이렇게 동작하는것 처럼 보이지, 실제로 코드가 이렇게 변경되지 않는다. `주의`
+console.log(a);
+a = 3;
+```
+이에따라 undefined 라는 결과를 출력한다. 
+즉 컨텍스트가 식별자 정보를 수집하기 때문에 호이스팅이 발생하게된다. 
 
 ### 실행컨테스트는 어떻게 동작할까? 
 ```javascript
