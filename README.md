@@ -104,8 +104,14 @@ call stack의 맨위의 쌓이는 순간이 현재 실행할 코드에 관여하
 함수 선언식의 경우 반드시 함수명이 정의 되어 있어야 한다.  
 함수명을 정의한 함수 표현식을 `기명 함수 표현식`, 정의하지 않은 것을 `익명함수 표현식`이라고 한다. 
 ```javascript 
-// 기명 함수 표현식 
-function a() { console.log(a); } 
+// 함수 선언식 
+function a() { console.log('a'); } 
+
+// 함수 표현식 - 익명 함수 표현식
+let b = function () { console.log('b'); }
+
+// 함수 표현식 - 기명 함수 표현식
+let c = fucntion d () {console.log('c,b')}
 ```
 
 
