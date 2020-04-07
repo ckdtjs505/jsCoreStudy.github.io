@@ -3,7 +3,7 @@
 
 1. [`ES버전`](https://medium.com/sjk5766/ecma-script-es-%EC%A0%95%EB%A6%AC%EC%99%80-%EB%B2%84%EC%A0%84%EB%B3%84-%ED%8A%B9%EC%A7%95-77715f696dcb)
 2. [`실행컨텍스트`](https://github.com/ckdtjs505/jsCoreStudy#%EC%8B%A4%ED%96%89%EC%BB%A8%ED%85%8D%EC%8A%A4%ED%8A%B8-execute-context)
-3. [`함수객체`](https://meetup.toast.com/posts/118), [`함수호출`](https://meetup.toast.com/posts/123)
+3. [`함수객체`](https://meetup.toast.com/posts/118), [`함수호출`](https://meetup.toast.com/posts/123) 
 4. `closure`
 5. `this`
 6. `callback`
@@ -96,3 +96,17 @@ fun2 함수 또한 함수 실행 컨텍스트를 생헝한후 call stack에 넣�
 앞서 살펴 본 바와 같이 실행컨텍스트는 실행한 코드에 제공할 환경 변수들을 모아놓은 객체임을 알았다.
 자바스크르립트는 실행하자마자 전역 코드(실행할 코드)에 제공할 환경 변수들을 모아서 call Stack에 넣는다. 
 call stack의 맨위의 쌓이는 순간이 현재 실행할 코드에 관여하게 된 시점 이므로. 전역 실행 컨텍스트를 실행한다. 
+
+## 함수 이해하기
+[`함수객체`](https://meetup.toast.com/posts/118), [`함수호출`](https://meetup.toast.com/posts/123)  
+
+### 함수 선언식과 함수 표현식
+함수 선언식의 경우 반드시 함수명이 정의 되어 있어야 한다.  
+함수명을 정의한 함수 표현식을 `기명 함수 표현식`, 정의하지 않은 것을 `익명함수 표현식`이라고 한다. 
+```javascript 
+// 기명 함수 표현식 
+function a() { console.log(a); } 
+```
+
+
+
