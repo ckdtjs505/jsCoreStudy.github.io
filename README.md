@@ -5,7 +5,7 @@
 2. [`실행컨텍스트`](https://github.com/ckdtjs505/jsCoreStudy#%EC%8B%A4%ED%96%89%EC%BB%A8%ED%85%8D%EC%8A%A4%ED%8A%B8-execute-context)
 3. [`함수객체`](https://meetup.toast.com/posts/118), [`함수호출`](https://meetup.toast.com/posts/123) 
 4. `closure`
-5. `this`
+5. `this` 
 6. `callback`
 7. `prototype`
 
@@ -114,5 +114,22 @@ let b = function () { console.log('b'); }
 let c = fucntion d () {console.log('c,b')}
 ```
 
-
+### closure 클로져 
+함수와 함수가 선언된 어휘적 환경(LexicalEnvironment)의 조합이다.  
+앞서 설명한 실행 컨텍스트에서 배운 `어휘적 환경(LexicalEnvironment)` 의 의미를 정확히 알았다면  
+클로저 이해하기가 어렵지 않다. `어휘적 환경(LexicalEnvironment)`은 이전 컨텍스트 객체의 정보를 가리키고 있다.
+따라서 이전 컨텍스트에서 정의된 변수에 접근이 가능하게 된다.  
+```javascript
+function outer() {
+  function inner(){
+    console.log(a);
+  }
+  var a = 1;
+  inner();
+}
+outer(); 
+```
+위의 코드의 실행 결과로 undefined가 아닌 1을 출력하게 된다.  
+왜냐하면 closure가 이전 컨텍스트의 변수 a를 참조했기 때문이다.  
+위에서 아래로의 코드가 익숙한 우리에게는 참 낯설게 느껴질수있다. 
 
