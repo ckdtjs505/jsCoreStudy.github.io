@@ -133,3 +133,39 @@ outer();
 왜냐하면 closure가 이전 컨텍스트의 변수 a를 참조했기 때문이다.  
 위에서 아래로의 코드가 익숙한 우리에게는 참 낯설게 느껴질수있다. 
 
+### this 
+js에서의 this는 어디서든 사용될수 있기에 많은 혼동을 가져왔다.  
+크롬 개발자 도구(F12)에서 this를 입력해보자. window객체가 나오게 되는데.  
+이유를 알아보자. 먼저 js에서 `this는 실행 컨텍스트가 생성 될때 함께 결정`된다. 
+크롭 개발자 도구(F12)에서 this를 입력 할 때 전역 실행 컨텍스트가 생성되면서 전역 객체를 바라보게된다.
+
+> 브라우저에서의 전역 객체는 `window`  
+Node.js에서의 전역 객체는 `global` 
+
+this는 실행 컨텍스트가 생성 될때 함께 결정된다고 배웠다. 
+
+```javascript
+var outer = function () {
+    var inner = function() {    
+        console.log('inner' + this);
+    }
+    console.log('outer' + this);
+    inner();
+} 
+outer();
+```
+
+위의 코드를 실행하면 어떤 결과 값이 나올지 추측해보자.  
+먼저 전역 컨텍스트가 생성이되고 outer()함수를 실행한다.  
+outer() 실행 컨텍스트가 생성되면서 this는 outer함수를 가리킨다.  
+inner() 실행 컨텍스트가 생성되고 this는 inner함수를 가리킨다.  
+라고 생각하여 결과값이 inner `f inner`, outer `f outer`라고 생각할 수 있다.  
+
+그러나 실제로 실행해보면 결과값으로 window 객체가 나온다.  
+놀라지 말자 js 전문가 `Douglas Crockford`는 이를 명백한 설계상의 오류라고 설명한다.  
+이러한 오류로 인해 `this`가 여렵게 느껴질 수 있다. 하지만 이렇게 정리해보자  
+함수에서 `this` 는 대부분 전역객체 `widnow`를 가리킨다 
+
+이러한 문제를 해결하기 위해 this 바인딩을 우회하는 방법이 중요하다 .
+
+
