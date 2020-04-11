@@ -1,5 +1,6 @@
 ## hasOwnProperty
 
+```javascript
 var age = {
   one : 1,
   two : 2,
@@ -12,6 +13,7 @@ var human = {
   age : age.five,
   name : 'sonia'
 }
+```
 
 `hasOwnProperty`는 객체에 프로퍼티를 가지고 있는지 체크한다.  
 ```javascript
@@ -29,5 +31,32 @@ human.hasOwnProperty('sonia') 은 false
 대부분 실무에서는 프로퍼티가 있고 없고도 중요하지만, 값을 판단하는 하는 경유가 더 많다.  
 이 점을 생각해보면, 프로퍼티보다는 값을 가지고 판단하는 것이 더 중요하다.
 
-> 사용자가 입력한 값에 대하여 올바른 값인지 판단하는 경우를 생각해보자 
+> 사용자가 입력한 값에 대하여 올바른 값인지 판단(유효성 검사)하는 경우를 생각해보자 
 
+```html
+<form> 
+  <input/>
+</form>
+```
+```javascript
+var age = {
+  one : 1,
+  two : 2,
+  three : 3,
+  four : 4,
+  five : 5
+}
+
+var form = document.querySelector('form');
+var input = form.querySelector('input');
+var validation = (value) => Object.values(age).includes(value);
+
+form.addEventListener('submit', () => {
+  var value = parseInt(input.value);
+  validation(value) ? 
+    console.log(`입력한 나이는 : ${value}` ) : 
+    console.log('잘못된 값을 입력했습니다')
+})
+```
+
+올바른 값인지 유효성을 판단할 때는 배열로 변환하는 것이 훨씬 정확하다.
