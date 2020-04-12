@@ -166,6 +166,76 @@ inner() 실행 컨텍스트가 생성되고 this는 inner함수를 가리킨다.
 이러한 오류로 인해 `this`가 여렵게 느껴질 수 있다. 하지만 이렇게 정리해보자  
 함수에서 `this` 는 대부분 전역객체 `widnow`를 가리킨다 
 
+하지만 함수를 메서드로 호출할때의 경우는 다르다. 
+메서드로 호출할 경우 호출한 주체의 정보가 담기게 된다. 
+
+```javascript 
+class dataModel {
+  constructor(name){
+    this.join = name;
+    this.showData();
+  }
+  showData(){
+    console.log(this);
+  }
+}
+
+new dataModel('school');
+```
+위의 코드를 실행해보자. showData에 있는 this는 dataModel을 가리키고 있다. 
+this가 어떻게 바인딩 되는지 쉽고 정확하게 알기위해서는 무엇으로 호출 되는지 파악하면된다.
+함수로 호출되면 this는 window로 메서드로 호출되면 this는 호출한 주체로 바인딩된다.
+
+> 함수로 호출되면 this는 window로 메서드로 호출되면 this는 호출한 주체로 바인딩된다.
+
 이러한 문제를 해결하기 위해 this 바인딩을 우회하는 방법이 중요하다 .
 
+```html
+<body> </body>
+```
+
+```javascript
+let data = [
+  {
+    name : "changsun",
+    age : 28,
+  },
+  {
+    name : "sugin",
+    age : 28,
+  },
+  {
+    name : "man",
+    age : 31,
+  },
+]
+
+class dataModel {
+  constructor(join){
+    this.data = data;
+    this.join = join;
+    this.self = this;
+    this.buildUI(); 
+  }
+  
+  buildUI(){
+    this.body = document.querySelector('body');
+    this.showData();
+  }
+  showData(){
+    let dom = []; 
+    this.data.forEach( (ele, idx) => {
+      let { join } = this.self;
+      dom.push( `
+        <div> 소속 : ${join} </div>
+        <div> 이름 : ${ele.name} </div>
+        <div> 나이 : ${ele.age} </div> <br>
+      `)
+    })
+    this.body.innerHTML = dom.join('');
+  }
+}
+
+new dataModel('school');
+```
 
