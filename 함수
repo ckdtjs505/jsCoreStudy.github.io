@@ -1,0 +1,142 @@
+## 함수 이해하기
+[`함수객체`](https://meetup.toast.com/posts/118), [`함수호출`](https://meetup.toast.com/posts/123)  
+
+### 함수 선언식과 함수 표현식
+함수 선언식의 경우 반드시 함수명이 정의 되어 있어야 한다.  
+함수명을 정의한 함수 표현식을 `기명 함수 표현식`, 정의하지 않은 것을 `익명함수 표현식`이라고 한다. 
+```javascript 
+// 함수 선언식 
+function a() { console.log('a'); } 
+
+// 함수 표현식 - 익명 함수 표현식
+let b = function () { console.log('b'); }
+
+// 함수 표현식 - 기명 함수 표현식
+let c = fucntion d () {console.log('c,b')}
+```
+
+### closure 클로져 
+함수와 함수가 선언된 어휘적 환경(LexicalEnvironment)의 조합이다.  
+앞서 설명한 실행 컨텍스트에서 배운 `어휘적 환경(LexicalEnvironment)` 의 의미를 정확히 알았다면  
+클로저 이해하기가 어렵지 않다. `어휘적 환경(LexicalEnvironment)`은 이전 컨텍스트 객체의 정보를 가리키고 있다.
+따라서 이전 컨텍스트에서 정의된 변수에 접근이 가능하게 된다.  
+```javascript
+function outer() {
+  function inner(){
+    console.log(a);
+  }
+  var a = 1;
+  inner();
+}
+outer(); 
+```
+위의 코드의 실행 결과로 undefined가 아닌 1을 출력하게 된다.  
+왜냐하면 closure가 이전 컨텍스트의 변수 a를 참조했기 때문이다.  
+위에서 아래로의 코드가 익숙한 우리에게는 참 낯설게 느껴질수있다. 
+
+### this 
+js에서의 this는 어디서든 사용될수 있기에 많은 혼동을 가져왔다.  
+크롬 개발자 도구(F12)에서 this를 입력해보자. window객체가 나오게 되는데.  
+이유를 알아보자. 먼저 js에서 `this는 실행 컨텍스트가 생성 될때 함께 결정`된다. 
+크롭 개발자 도구(F12)에서 this를 입력 할 때 전역 실행 컨텍스트가 생성되면서 전역 객체를 바라보게된다.
+
+> 브라우저에서의 전역 객체는 `window`  
+Node.js에서의 전역 객체는 `global` 
+
+this는 실행 컨텍스트가 생성 될때 함께 결정된다고 배웠다. 
+
+```javascript
+var outer = function () {
+    var inner = function() {    
+        console.log('inner' + this);
+    }
+    console.log('outer' + this);
+    inner();
+} 
+outer();
+```
+
+위의 코드를 실행하면 어떤 결과 값이 나올지 추측해보자.  
+먼저 전역 컨텍스트가 생성이되고 outer()함수를 실행한다.  
+outer() 실행 컨텍스트가 생성되면서 this는 outer함수를 가리킨다.  
+inner() 실행 컨텍스트가 생성되고 this는 inner함수를 가리킨다.  
+라고 생각하여 결과값이 inner `f inner`, outer `f outer`라고 생각할 수 있다.  
+
+그러나 실제로 실행해보면 결과값으로 window 객체가 나온다.  
+놀라지 말자 js 전문가 `Douglas Crockford`는 이를 명백한 설계상의 오류라고 설명한다.  
+이러한 오류로 인해 `this`가 여렵게 느껴질 수 있다. 하지만 이렇게 정리해보자  
+함수에서 `this` 는 대부분 전역객체 `widnow`를 가리킨다 
+
+하지만 함수를 메서드로 호출할때의 경우는 다르다. 
+메서드로 호출할 경우 호출한 주체의 정보가 담기게 된다. 
+
+```javascript 
+class dataModel {
+  constructor(name){
+    this.join = name;
+    this.showData();
+  }
+  showData(){
+    console.log(this);
+  }
+}
+
+new dataModel('school');
+```
+위의 코드를 실행해보자. showData에 있는 this는 dataModel을 가리키고 있다. 
+this가 어떻게 바인딩 되는지 쉽고 정확하게 알기위해서는 무엇으로 호출 되는지 파악하면된다.
+함수로 호출되면 this는 window로 메서드로 호출되면 this는 호출한 주체로 바인딩된다.
+
+> 함수로 호출되면 this는 window로 메서드로 호출되면 this는 호출한 주체로 바인딩된다.
+
+이러한 문제를 해결하기 위해 this 바인딩을 우회하는 방법이 중요하다 .
+
+```html
+<body> </body>
+```
+
+```javascript
+let data = [
+  {
+    name : "changsun",
+    age : 28,
+  },
+  {
+    name : "sugin",
+    age : 28,
+  },
+  {
+    name : "man",
+    age : 31,
+  },
+]
+
+class dataModel {
+  constructor(join){
+    this.data = data;
+    this.join = join;
+    this.self = this;
+    this.buildUI(); 
+  }
+  
+  buildUI(){
+    this.body = document.querySelector('body');
+    this.showData();
+  }
+  showData(){
+    let dom = []; 
+    this.data.forEach( (ele, idx) => {
+      let { join } = this.self;
+      dom.push( `
+        <div> 소속 : ${join} </div>
+        <div> 이름 : ${ele.name} </div>
+        <div> 나이 : ${ele.age} </div> <br>
+      `)
+    })
+    this.body.innerHTML = dom.join('');
+  }
+}
+
+new dataModel('school');
+```
+
