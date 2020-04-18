@@ -1,43 +1,11 @@
-## 함수 이해하기
-[`함수객체`](https://meetup.toast.com/posts/118), [`함수호출`](https://meetup.toast.com/posts/123)  
+# this
+ `this 이해하기`
+ `함수 this - window 객체`
+ `메서드 내부에서의 this - 호출한 주체의 정보`
+ `콜백 함수 호출시 그 함수 내부에서의 this`
+ `생성자 내부에서의 this `
 
-### 함수 선언식과 함수 표현식
-함수 선언식의 경우 반드시 함수명이 정의 되어 있어야 한다.  
-함수명을 정의한 함수 표현식을 `기명 함수 표현식`, 정의하지 않은 것을 `익명함수 표현식`이라고 한다. 
-
-```javascript 
-// 함수 선언식 
-function a() { console.log('a'); } 
-
-// 함수 표현식 - 익명 함수 표현식
-let b = function () { console.log('b'); }
-
-// 함수 표현식 - 기명 함수 표현식
-let c = fucntion d () {console.log('c,b')}
-```
-
-### closure 클로져 
-함수와 함수가 선언된 어휘적 환경(LexicalEnvironment)의 조합이다.  
-앞서 설명한 실행 컨텍스트에서 배운 `어휘적 환경(LexicalEnvironment)` 의 의미를 정확히 알았다면  
-클로저 이해하기가 어렵지 않다. `어휘적 환경(LexicalEnvironment)`은 이전 컨텍스트 객체의 정보를 가리키고 있다.
-따라서 이전 컨텍스트에서 정의된 변수에 접근이 가능하게 된다.  
-
-```javascript
-function outer() {
-  function inner(){
-    console.log(a);
-  }
-  var a = 1;
-  inner();
-}
-outer(); 
-```
-
-위의 코드의 실행 결과로 undefined가 아닌 1을 출력하게 된다.  
-왜냐하면 closure가 이전 컨텍스트의 변수 a를 참조했기 때문이다.  
-위에서 아래로의 코드가 익숙한 우리에게는 참 낯설게 느껴질수있다. 
-
-## this 
+### this 이해하기
 js에서의 this는 어디서든 사용될수 있기에 많은 혼동을 가져왔다.  
 크롬 개발자 도구(F12)에서 this를 입력해보자. window객체가 나오게 되는데.  
 이유를 알아보자. 먼저 js에서 `this는 실행 컨텍스트가 생성 될때 함께 결정`된다. 
@@ -46,7 +14,7 @@ js에서의 this는 어디서든 사용될수 있기에 많은 혼동을 가져�
 > 브라우저에서의 전역 객체는 `window`  
 Node.js에서의 전역 객체는 `global` 
 
-### 함수  this - window 객체
+### 함수 this - window 객체
 
 this는 실행 컨텍스트가 생성 될때 함께 결정된다고 배웠다. 
 
@@ -149,6 +117,41 @@ inner함수에도 스코프 체인에 의해 this(object)에 접근할 수 있�
 
 ### 콜백 함수 호출시 그 함수 내부에서의 this
 
+콜백 함수에서의 `this는 때에 따라 다르다`. 정말 때에 따라다르다.  
+굳이 어떤 때인지 정하자면, 콜백 함수의 제어권을 가지는 함수가 this를 무엇으로 할지 결정한다.  
+특별히 결정하지 않는 경우에는 this는 전역 객체(window)를 바라보게 된다.  
+
+```javascript
+let ary = [ 1, 2, 3, 4, 5];
+// forEach 콜백 함수 호출 
+ary.forEach( function(ele){
+  console.log(this, ele);
+})
+
+실행 결과 
+Window 1
+Window 2
+Window 3  
+Window 4
+Window 5
+```
+
+forEach가 제어권을 가지는 함수로써, this를 특별히 결정하지 않는다.  
+생각해보면 굳이 반복문을 돌리는데 this를 결정 할만한게 있을까?? 
+혹시나 있다면 알려주세요 ㅎㅎ 
+
+```javascript
+
+document.body.innerHTML = "<Button>버튼</Button>"
+document.querySelector('Button')
+  .addEventListener('click', function() { console.log(this) });
+  
+버튼 클릭시 
+<button> 버튼 </button>
+```
+addEventListener가 제어권을 가지는 함수로써, this는 앞서 지정한 엘리먼트로 결정한다.
+
+즉 콜백함수에서 this는 `콜백함수에 따라 다르게 동작한다` 
 
 ### 생성자 내부에서의 this 
 
