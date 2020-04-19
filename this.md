@@ -3,7 +3,7 @@
  [`함수 this` → 전역 객체](https://github.com/ckdtjs505/jsCoreStudy/blob/master/this.md#%ED%95%A8%EC%88%98-this---window-%EA%B0%9D%EC%B2%B4)  
  [`메서드 this` → 호출한 주체](https://github.com/ckdtjs505/jsCoreStudy/blob/master/this.md#%EB%A9%94%EC%84%9C%EB%93%9C-%EB%82%B4%EB%B6%80%EC%97%90%EC%84%9C%EC%9D%98-this---%ED%98%B8%EC%B6%9C%ED%95%9C-%EC%A3%BC%EC%B2%B4%EC%9D%98-%EC%A0%95%EB%B3%B4)  
  [`콜백 함수 this` → 콜백 함수에 따라 다름](https://github.com/ckdtjs505/jsCoreStudy/blob/master/this.md#this%EB%A5%BC-%EC%9A%B0%ED%9A%8C%ED%95%98%EB%8A%94-%EB%B0%A9%EB%B2%95-%EB%A9%94%EC%84%9C%EB%93%9C-%EC%95%88%EC%97%90%EC%84%9C%EB%A7%8C)  
- [`생성자 this`](https://github.com/ckdtjs505/jsCoreStudy/blob/master/this.md#%EC%83%9D%EC%84%B1%EC%9E%90-%EB%82%B4%EB%B6%80%EC%97%90%EC%84%9C%EC%9D%98-this)  
+ [`생성자 this` → 인스턴스(생성객체)](https://github.com/ckdtjs505/jsCoreStudy/blob/master/this.md#%EC%83%9D%EC%84%B1%EC%9E%90-%EB%82%B4%EB%B6%80%EC%97%90%EC%84%9C%EC%9D%98-this)  
 
 ### this 이해하기
 js에서의 this는 어디서든 사용될수 있기에 많은 혼동을 가져왔다.  
@@ -81,40 +81,6 @@ object.outer();
 메서드 내부에서 동작한 outer의 this는 호출한 주체인 object를 바인딩 했다.  
 이에 반한 함수로서 동작한 inner의 this는 앞서 설명한 window를 바인딩 했다.  
 
-### this를 우회하는 방법 (메서드 안에서만)
-
-앞서 설명한 코드에서 함수로 동작한 inner의 this는 window를 바인딩 했다.   
-하지만 실무에서 inner가 호출한 주체인 object를 호출해서 사용할 경우가 많다.  
-왜냐하면 inner와 outer 모두가 호출 주체가 object로 동일하기 때문이다.  
-
-이에 따라 this를 우회해야하는 경우가 있는데. 대표적인 방법으로 `변수를 활용` 하는 방법이 있다.  
-
-```javascript 
-var object = {
-    outer : function() {
-        var self = this;
-        var inner = function(){
-            console.log('inner' + self);
-        }
-        console.log('outer' + this);
-        inner();
-    }
-}
-
-결과값을 확인해보자 
-1. 먼저 전역 컨텍스트가 생성이되고 object 객체를 생성한다. 
-  → 12 번째줄object객체의 메서드 outer() 실행 
-2. outer() 실행 컨텍스트가 생성되면서 this는 호출한 주체인 object 를 바인딩 한다.
-  → 6 번째줄 console 실행 : outer object object
-3. inner() 실행 컨텍스트가 생성되고 this는 window 를 바인딩 한다.  
-  → 4 번째줄 console 실행 : inner object object
-
-object.outer();
-```
-
-self라는 변수에 outer의 호출 객체를 바인딩한 this(object)를 할당함으로써   
-inner함수에도 스코프 체인에 의해 this(object)에 접근할 수 있게 된다. 
-
 ### 콜백 함수 호출시 그 함수 내부에서의 this
 
 콜백 함수에서의 `this는 때에 따라 다르다`. 정말 때에 따라다르다.  
@@ -153,12 +119,15 @@ addEventListener가 제어권을 가지는 함수로써, this는 앞서 지정�
 
 즉 콜백함수에서 this는 `콜백함수에 따라 다르게 동작한다` 
 
-### 생성자 내부에서의 this 
+### 생성자 내부에서의 this - 인스턴스(생성객체)
+
+생성자 함수는 new가 붙어 있는 함수로, 주로 class 객체(인스턴스)를 생성하는데 사용되는 함수이다.  
+생성자 함수로써 호출 될 경우 내부에서의 this는 class 객체(인스턴스) 자기자신이 된다.  
 
 ```javascript 
 class dataModel {
   constructor(name){
-    this.join = name;
+    this.name = name;
     this.showData();
   }
   showData(){
@@ -167,12 +136,52 @@ class dataModel {
 }
 
 new dataModel('school');
-```
-위의 코드를 실행해보자. showData에 있는 this는 dataModel을 가리키고 있다. 
-this가 어떻게 바인딩 되는지 쉽고 정확하게 알기위해서는 무엇으로 호출 되는지 파악하면된다.
-함수로 호출되면 this는 window로 메서드로 호출되면 this는 호출한 주체로 바인딩된다.
 
-> 함수로 호출되면 this는 window로 메서드로 호출되면 this는 호출한 주체로 바인딩된다.
+위의 코드를 실행해보자. 
+dataModal {name: "school"}를 출력한다. 
+좀더 자세히 들여다 보면 showData() 메서드도 생성되어 있음을 확인 할 수 이다.
+즉 this는 dataModel의 생성된 인스턴스를 가리키고 있다.  
+
+```
+
+위의 코드를 통해 생성자 함수에서의 this는 생성된 인스턴스를 가리키고 있다.  
+즉 Class 코드 안에서의 this는 생성될 자기 자신을 가리키고 있다고 생각해도 무방하다.    
+
+### this를 우회하는 방법 : 변수 활용
+
+앞서 설명한 코드에서 함수로 동작한 inner의 this는 window를 바인딩 했다.   
+하지만 실무에서 inner가 호출한 주체인 object를 호출해서 사용할 경우가 많다.  
+왜냐하면 inner와 outer 모두가 호출 주체가 object로 동일하기 때문이다.  
+
+이에 따라 this를 우회해야하는 경우가 있는데. 대표적인 방법으로 `변수를 활용` 하는 방법이 있다.  
+
+```javascript 
+var object = {
+    outer : function() {
+        var self = this;
+        var inner = function(){
+            console.log('inner' + self);
+        }
+        console.log('outer' + this);
+        inner();
+    }
+}
+
+결과값을 확인해보자 
+1. 먼저 전역 컨텍스트가 생성이되고 object 객체를 생성한다. 
+  → 12 번째줄object객체의 메서드 outer() 실행 
+2. outer() 실행 컨텍스트가 생성되면서 this는 호출한 주체인 object 를 바인딩 한다.
+  → 6 번째줄 console 실행 : outer object object
+3. inner() 실행 컨텍스트가 생성되고 this는 window 를 바인딩 한다.  
+  → 4 번째줄 console 실행 : inner object object
+
+object.outer();
+```
+
+self라는 변수에 outer의 호출 객체를 바인딩한 this(object)를 할당함으로써   
+inner함수에도 스코프 체인에 의해 this(object)에 접근할 수 있게 된다. 
+
+### this를 우회하는 방법 : arrow function
 
 이러한 문제를 해결하기 위해 this 바인딩을 우회하는 방법이 중요하다 .
 ES6에서는 this가 전역객체를 바라보는 문제를 해결하고자, this를 바인딩하지 않는 화살표 함수가 생성되었다.  
@@ -226,4 +235,3 @@ class dataModel {
 
 new dataModel('school');
 ```
-
