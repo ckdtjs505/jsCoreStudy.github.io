@@ -1,9 +1,14 @@
 # this
  [`this 이해하기`](https://github.com/ckdtjs505/jsCoreStudy/blob/master/this.md#this-%EC%9D%B4%ED%95%B4%ED%95%98%EA%B8%B0)  
- [`함수 this` → 전역 객체](https://github.com/ckdtjs505/jsCoreStudy/blob/master/this.md#%ED%95%A8%EC%88%98-this---window-%EA%B0%9D%EC%B2%B4)  
- [`메서드 this` → 호출한 주체](https://github.com/ckdtjs505/jsCoreStudy/blob/master/this.md#%EB%A9%94%EC%84%9C%EB%93%9C-%EB%82%B4%EB%B6%80%EC%97%90%EC%84%9C%EC%9D%98-this---%ED%98%B8%EC%B6%9C%ED%95%9C-%EC%A3%BC%EC%B2%B4%EC%9D%98-%EC%A0%95%EB%B3%B4)  
- [`콜백 함수 this` → 콜백 함수에 따라 다름](https://github.com/ckdtjs505/jsCoreStudy/blob/master/this.md#this%EB%A5%BC-%EC%9A%B0%ED%9A%8C%ED%95%98%EB%8A%94-%EB%B0%A9%EB%B2%95-%EB%A9%94%EC%84%9C%EB%93%9C-%EC%95%88%EC%97%90%EC%84%9C%EB%A7%8C)  
- [`생성자 this` → 인스턴스(생성객체)](https://github.com/ckdtjs505/jsCoreStudy/blob/master/this.md#%EC%83%9D%EC%84%B1%EC%9E%90-%EB%82%B4%EB%B6%80%EC%97%90%EC%84%9C%EC%9D%98-this)  
+  1) [`함수 this` → 전역 객체](https://github.com/ckdtjs505/jsCoreStudy/blob/master/this.md#%ED%95%A8%EC%88%98-this---window-%EA%B0%9D%EC%B2%B4)  
+  2) [`메서드 this` → 호출한 주체](https://github.com/ckdtjs505/jsCoreStudy/blob/master/this.md#%EB%A9%94%EC%84%9C%EB%93%9C-%EB%82%B4%EB%B6%80%EC%97%90%EC%84%9C%EC%9D%98-this---%ED%98%B8%EC%B6%9C%ED%95%9C-%EC%A3%BC%EC%B2%B4%EC%9D%98-%EC%A0%95%EB%B3%B4)  
+  3) [`콜백 함수 this` → 콜백 함수에 따라 다름](https://github.com/ckdtjs505/jsCoreStudy/blob/master/this.md#this%EB%A5%BC-%EC%9A%B0%ED%9A%8C%ED%95%98%EB%8A%94-%EB%B0%A9%EB%B2%95-%EB%A9%94%EC%84%9C%EB%93%9C-%EC%95%88%EC%97%90%EC%84%9C%EB%A7%8C)  
+  4) [`생성자 this` → 인스턴스(생성객체)](https://github.com/ckdtjs505/jsCoreStudy/blob/master/this.md#%EC%83%9D%EC%84%B1%EC%9E%90-%EB%82%B4%EB%B6%80%EC%97%90%EC%84%9C%EC%9D%98-this)  
+ 
+ [`this 우회하기`]
+ 1) [`변수 활용`](https://github.com/ckdtjs505/jsCoreStudy/blob/master/this.md#this%EB%A5%BC-%EC%9A%B0%ED%9A%8C%ED%95%98%EB%8A%94-%EB%B0%A9%EB%B2%95--%EB%B3%80%EC%88%98-%ED%99%9C%EC%9A%A9)
+ 2) [`arrow function`](https://github.com/ckdtjs505/jsCoreStudy/blob/master/this.md#this%EB%A5%BC-%EC%9A%B0%ED%9A%8C%ED%95%98%EB%8A%94-%EB%B0%A9%EB%B2%95--arrow-function)
+ 3) [`call`,`apply` 메서드]()
 
 ### this 이해하기
 js에서의 this는 어디서든 사용될수 있기에 많은 혼동을 가져왔다.  
@@ -147,7 +152,9 @@ dataModal {name: "school"}를 출력한다.
 위의 코드를 통해 생성자 함수에서의 this는 생성된 인스턴스를 가리키고 있다.  
 즉 Class 코드 안에서의 this는 생성될 자기 자신을 가리키고 있다고 생각해도 무방하다.    
 
-### this를 우회하는 방법 : 변수 활용
+## this를 우회하는 방법
+
+### 변수 활용
 
 앞서 설명한 코드에서 함수로 동작한 inner의 this는 window를 바인딩 했다.   
 하지만 실무에서 inner가 호출한 주체인 object를 호출해서 사용할 경우가 많다.  
@@ -167,71 +174,105 @@ var object = {
     }
 }
 
+object.outer();
+
 결과값을 확인해보자 
 1. 먼저 전역 컨텍스트가 생성이되고 object 객체를 생성한다. 
   → 12 번째줄object객체의 메서드 outer() 실행 
 2. outer() 실행 컨텍스트가 생성되면서 this는 호출한 주체인 object 를 바인딩 한다.
-  → 6 번째줄 console 실행 : outer object object
 3. inner() 실행 컨텍스트가 생성되고 this는 window 를 바인딩 한다.  
   → 4 번째줄 console 실행 : inner object object
-
-object.outer();
+  → 6 번째줄 console 실행 : outer object object
 ```
 
 self라는 변수에 outer의 호출 객체를 바인딩한 this(object)를 할당함으로써   
-inner함수에도 스코프 체인에 의해 this(object)에 접근할 수 있게 된다. 
+inner함수에도 스코프 체인에 의해 this(object)에 접근할 수 있게 된다.  
 
-### this를 우회하는 방법 : arrow function
+### arrow function
 
-이러한 문제를 해결하기 위해 this 바인딩을 우회하는 방법이 중요하다 .
+이러한 문제를 해결하기 위해 this 바인딩을 우회하는 방법이 중요하다.  
 ES6에서는 this가 전역객체를 바라보는 문제를 해결하고자, this를 바인딩하지 않는 화살표 함수가 생성되었다.  
-이에따라 앞서 설명한 this가 잘못 바인딩 되는 문제를 해결 할 수 있게 된다.  
+말그대로 this를 바인딩 하지 않아 상위 스코프의 this에 접근할 수 있게 된다.  
 
-```html
-<body> </body>
-```
-
-```javascript
-let data = [
-  {
-    name : "changsun",
-    age : 28,
-  },
-  {
-    name : "sugin",
-    age : 28,
-  },
-  {
-    name : "man",
-    age : 31,
-  },
-]
-
-class dataModel {
-  constructor(join){
-    this.data = data;
-    this.join = join;
-    this.self = this;
-    this.buildUI(); 
-  }
-  
-  buildUI(){
-    this.body = document.querySelector('body');
-    this.showData();
-  }
-  showData(){
-    let dom = []; 
-    this.data.forEach( (ele, idx) => {
-      let { join } = this.self;
-      dom.push( `
-        <div> 소속 : ${join} </div>
-        <div> 이름 : ${ele.name} </div>
-        <div> 나이 : ${ele.age} </div> <br>
-      `)
-    })
-    this.body.innerHTML = dom.join('');
-  }
+```javascript 
+var object = {
+    outer : function() {
+        var inner = () => {
+            console.log('inner' + self);
+        }
+        console.log('outer' + this);
+        inner();
+    }
 }
 
-new dataModel('school');
+object.outer();
+
+결과값을 확인해보자 
+1. 먼저 전역 컨텍스트가 생성이되고 object 객체를 생성한다. 
+2. 12 번째줄object객체의 메서드 outer() 실행 
+3. outer() 실행 컨텍스트가 생성되면서 this는 호출한 주체인 object 를 바인딩 한다.
+4. inner() 실행 컨텍스트가 생성되면서 this는 바인딩 되지 않는다.  
+5. this가 바인딩 되어 있지않으므로 상위 스코프의 this에 접근한다.
+  → 4 번째줄 console 실행 : inner object object
+6. 6 번째줄 console 실행 : outer object object
 ```
+
+앞서 설명한 변수를 활용한 this 바인딩 우회와 동일한 결과를 가져오는 것을 확인할 수 있었다.  
+ES6가 지원된다면 `화살표 함수`로 그렇지 않다면 부득이하게 `변수`를 활용하여 구현할 수 있다.  
+
+### call, apply 메서드 
+
+> call 메서드는 주어진 `this`값 및 각각 전달된 인수와 함께 호출합니다. [출처 MDN](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Function/call)
+
+간단하게 설명하면 call 메서드는 this도 함께 전달한다고 이해하면된다.  
+예시를 통해 좀더 정확하게 이해해보자.  
+
+```javascript
+let func = function ( a, b, c) {
+  console.log(this, a,b,c);
+}
+
+func.call({ a:1 }, 1,2,3);
+
+실행결과 
+{a:1}, 1, 2, 3
+
+this를 {a:1}로 명시적으로 변경할 수 있다.
+```
+
+> apply 메서드는 주어진 `this`값과 배열(또는 유사배열 객체)로 제공되는 `arguments`로 함수를 호출합니다. [출처 MDN](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Function/apply)
+
+apply 메서드의 동작도 call과 동일하지만, 인수로 배열을 넘긴다고 이해하면 된다.  
+즉 인수로 배열을 넘기고 싶을때 apply 함수가 유용하게 사용된다는점!  
+
+```javascript
+let func = function ( a, b, c) {
+  console.log(this, a,b,c);
+}
+
+func.apply({ a : 1}, [1,2,3]);
+
+실행결과 
+{a:1}, 1, 2, 3
+
+this를 {a:1}로 명시적으로 변경 함과 동시에
+배열을 인수로 넘겨 사용할수 있다. 
+```
+
+apply함수가 유용하게 사용되어 질 때(최댓값, 최솟값 찾기)
+```javascript
+let values = [1, 5, 2, 3, 9];
+
+ // 굳이 this를 바인딩 할 필요가 없으므로 null값을 입력
+let max = Math.max.apply(null, values);
+let min = Math.min.apply(null, values);
+console.log(max,min);
+
+[실행결과]
+9, 1
+```
+
+
+
+
+
