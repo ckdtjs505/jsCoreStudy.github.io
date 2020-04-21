@@ -154,7 +154,7 @@ dataModal {name: "school"}를 출력한다.
 
 ## this를 우회하는 방법
 
-### 변수 활용
+### 1) 변수 활용
 
 앞서 설명한 코드에서 함수로 동작한 inner의 this는 window를 바인딩 했다.   
 하지만 실무에서 inner가 호출한 주체인 object를 호출해서 사용할 경우가 많다.  
@@ -188,7 +188,7 @@ object.outer();
 self라는 변수에 outer의 호출 객체를 바인딩한 this(object)를 할당함으로써   
 inner함수에도 스코프 체인에 의해 this(object)에 접근할 수 있게 된다.  
 
-### arrow function
+### 2) arrow function
 
 이러한 문제를 해결하기 위해 this 바인딩을 우회하는 방법이 중요하다.  
 ES6에서는 this가 전역객체를 바라보는 문제를 해결하고자, this를 바인딩하지 않는 화살표 함수가 생성되었다.  
@@ -220,7 +220,7 @@ object.outer();
 앞서 설명한 변수를 활용한 this 바인딩 우회와 동일한 결과를 가져오는 것을 확인할 수 있었다.  
 ES6가 지원된다면 `화살표 함수`로 그렇지 않다면 부득이하게 `변수`를 활용하여 구현할 수 있다.  
 
-### call, apply 메서드 
+### 3) call, apply 메서드 
 
 > call 메서드는 주어진 `this`값 및 각각 전달된 인수와 함께 호출합니다. [출처 MDN](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Function/call)
 
@@ -252,7 +252,7 @@ let func = function ( a, b, c) {
 
 func.apply({ a : 1}, [1,2,3]);
 
-실행결과 
+[실행결과] 
 {a:1}, 1, 2, 3
 
 this를 {a:1}로 명시적으로 변경 함과 동시에
@@ -270,9 +270,13 @@ console.log(max,min);
 
 [실행결과]
 9, 1
+
+최근 ES6에서는 펼침 연산자가 도입되어 훨씬 가독성 있는 코드를 작성할 수 있다.
+let max = Math.max(...values);
+let min = Math.min(...values);
+console.log(max,min);
+
+[실행결과]
+9,1
 ```
-
-
-
-
 
