@@ -6,9 +6,9 @@
   4) [`생성자 this` → 인스턴스(생성객체)](https://github.com/ckdtjs505/jsCoreStudy/blob/master/this.md#%EC%83%9D%EC%84%B1%EC%9E%90-%EB%82%B4%EB%B6%80%EC%97%90%EC%84%9C%EC%9D%98-this)  
  
  [`this 우회하기`]
- 1) [`변수 활용`](https://github.com/ckdtjs505/jsCoreStudy/blob/master/this.md#this%EB%A5%BC-%EC%9A%B0%ED%9A%8C%ED%95%98%EB%8A%94-%EB%B0%A9%EB%B2%95--%EB%B3%80%EC%88%98-%ED%99%9C%EC%9A%A9)
- 2) [`arrow function`](https://github.com/ckdtjs505/jsCoreStudy/blob/master/this.md#this%EB%A5%BC-%EC%9A%B0%ED%9A%8C%ED%95%98%EB%8A%94-%EB%B0%A9%EB%B2%95--arrow-function)
- 3) [`call`,`apply` 메서드]()
+ 1) [`변수 활용`](https://github.com/ckdtjs505/jsCoreStudy/blob/master/this.md#1-%EB%B3%80%EC%88%98-%ED%99%9C%EC%9A%A9)
+ 2) [`arrow function`](https://github.com/ckdtjs505/jsCoreStudy/blob/master/this.md#2-arrow-function)
+ 3) [`call`,`apply` 메서드](https://github.com/ckdtjs505/jsCoreStudy/blob/master/this.md#3-call-apply-%EB%A9%94%EC%84%9C%EB%93%9C)
 
 ### this 이해하기
 js에서의 this는 어디서든 사용될수 있기에 많은 혼동을 가져왔다.  
@@ -279,4 +279,14 @@ console.log(max,min);
 [실행결과]
 9,1
 ```
+
+call/apply 메서드를 활용 할 수 있다면 다양한 조작을 할 수 있게된다. 
+
+```html
+<div data-number="5"> 5 </div>
+<div data-number="15"> 15 </div>
+<div data-number="25"> 25 </div>
+```
+html에 있는 data-number값을 추출하고 싶다고 하자., 
+
 
