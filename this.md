@@ -259,7 +259,7 @@ this를 {a:1}로 명시적으로 변경 함과 동시에
 배열을 인수로 넘겨 사용할수 있다. 
 ```
 
-apply함수가 유용하게 사용되어 질 때(최댓값, 최솟값 찾기)
+1) apply 함수가 유용하게 사용되어 질 때(최댓값, 최솟값 찾기)
 ```javascript
 let values = [1, 5, 2, 3, 9];
 
@@ -280,13 +280,28 @@ console.log(max,min);
 9,1
 ```
 
-call/apply 메서드를 활용 할 수 있다면 다양한 조작을 할 수 있게된다. 
+2) call 함수가 유용하게 사용되어 질 때(유사배열객 배열변환)
 
 ```html
 <div data-number="5"> 5 </div>
 <div data-number="15"> 15 </div>
 <div data-number="25"> 25 </div>
 ```
-html에 있는 data-number값을 추출하고 싶다고 하자., 
+html에 있는 data-number값을 추출하고 싶다고 하자.
+call로 유사 배열 객체를 넘겨서 탐색하자 
 
+```javascript
+var aDiv = Array.prototype.slice.call(document.querySelectorAll("div")) // 배열로 변환 
+  .map( function(ele){ return Number(ele.dataset.number)});
 
+실행결과 
+5
+15
+25
+
+설명
+document.querySelectorAll("div")는 유사배열 객체이다. 따라서 배열메서드인 map이 동작하지 않는다.
+이에따라 document.querySelectorAll("div")를 배열로 변환해줘야한다.  
+Array.prototype.slice를 이용해 배열을 리턴받는다. 인풋값이 배열이므로 call()함수를 사용하여 넘겨준다. 
+이후 유사배열 객체가 배열객체가 되었다면, 배열함수인 map을 이용하여 data-number의 값을 가져올수 있게 된다.
+```
