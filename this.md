@@ -258,8 +258,8 @@ func.apply({ a : 1}, [1,2,3]);
 this를 {a:1}로 명시적으로 변경 함과 동시에
 배열을 인수로 넘겨 사용할수 있다. 
 ```
+>  1) apply 함수가 유용하게 사용되어 질 때(최댓값, 최솟값 찾기)
 
-1) apply 함수가 유용하게 사용되어 질 때(최댓값, 최솟값 찾기)
 ```javascript
 let values = [1, 5, 2, 3, 9];
 
@@ -280,13 +280,14 @@ console.log(max,min);
 9,1
 ```
 
-2) call 함수가 유용하게 사용되어 질 때(유사배열객 배열변환)
+> 2) call 함수가 유용하게 사용되어 질 때(유사배열객체 NodeList 배열변환)
 
 ```html
 <div data-number="5"> 5 </div>
 <div data-number="15"> 15 </div>
 <div data-number="25"> 25 </div>
 ```
+
 html에 있는 data-number값을 추출하고 싶다고 하자.
 call로 유사 배열 객체를 넘겨서 탐색하자 
 
@@ -304,4 +305,27 @@ document.querySelectorAll("div")는 유사배열 객체이다. 따라서 배열�
 이에따라 document.querySelectorAll("div")를 배열로 변환해줘야한다.  
 Array.prototype.slice를 이용해 배열을 리턴받는다. 인풋값이 배열이므로 call()함수를 사용하여 넘겨준다. 
 이후 유사배열 객체가 배열객체가 되었다면, 배열함수인 map을 이용하여 data-number의 값을 가져올수 있게 된다.
+```
+
+> 3) call 함수가 유용하게 사용되어 질 때(arguments)
+```javascript
+function func(){
+  var argv = Array.slice.call(arguments);
+  argv.forEach( ele => {
+    console.log(ele);
+  }); 
+}
+
+func(1,2,3,4,5);
+
+실행결과 
+1
+2
+3
+4
+5
+
+설명 
+arguments는 배열객체가 아니다. 동일하게 arguments를 배열 메서드를 활용하여 순회하기 위해서는 
+배열 객체로 변환해야한다. 이에따라 slice.call(arguments)을 사용해여 배열로 변환하여, forEach를 사용해 순회가 가능하다.  
 ```
