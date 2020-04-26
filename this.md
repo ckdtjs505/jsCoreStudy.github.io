@@ -335,3 +335,18 @@ arguments는 배열객체가 아니다. 동일하게 arguments를 배열 메서�
 다르게 생각해보면, call/apply 메서드는 this를 명시적으로 바인딩하라고 만들었는데, 조금 다르게 활용되어지고 있다.  
 이에 따라 ES6에서 Array.from 메서드가 유사배열 객체를 배열로 변환해 주고 있다.  
 
+4) bind 메서드  
+
+> 메서드가 호출되면 새로운 함수를 생성, 첫 인자는 `this` 키워드를 설정 [출처 MDN](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Function/bind)
+
+```javascript
+let func = function(a,b,c){
+  console.log(this, a,b,c);
+}
+func(1,2,3,4);
+
+let bindFunc = func.bind({ x : 1});
+bindFunc(1,2,3,4);
+```
+
+
