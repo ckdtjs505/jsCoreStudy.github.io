@@ -37,3 +37,17 @@ var timer = setInterval( () => {
 setInterval()함수가 count1의 값을 1씩 증가후, 0.3초마다 실행한다. 
 count1의 값이 4보다 커지면 clearInterval()을 호출하여 timer를 종료한다.  
 ```
+
+콜백 함수는 함수이다. 어떤 객체의 메서드로 호출되더라도 함수로써 호출된다. 코드로 알아보자.  
+```javascript
+var obj = {
+  vals: [1,2,3],
+  logValues: function(v,i) {
+    console.log(this,v,i);
+  }
+}
+// 메서드로써 호출 => this : obj 
+obj.logValues(1,2); 
+// 콜백함수로써 호출 => this : window
+obj.vals.forEach(obj.logValues);
+```
