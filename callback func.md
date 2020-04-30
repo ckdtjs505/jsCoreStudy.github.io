@@ -39,6 +39,7 @@ count1의 값이 4보다 커지면 clearInterval()을 호출하여 timer를 종�
 ```
 
 콜백 함수는 함수이다. 어떤 객체의 메서드로 호출되더라도 함수로써 호출된다. 코드로 알아보자.  
+
 ```javascript
 var obj = {
   vals: [1,2,3],
@@ -51,3 +52,61 @@ obj.logValues(1,2);
 // 콜백함수로써 호출 => this : window
 obj.vals.forEach(obj.logValues);
 ```
+
+즉 콜백 함수는 함수로 호출되기 때문에, this가 window객체를 바라본다는 문제가 있다.
+이러한 문제를 해결하고자. this 바인딩을 우회 할 수 있어야한다. [this 바인딩](https://github.com/ckdtjs505/jsCoreStudy/blob/master/this.md)
+
+### 1) 변수를 활용한 this 우회 
+
+먼저 전통적인 방법인 변수를 활용하여 this를 우회해보자  
+```javascript
+var obj = {
+  name: "sonia",
+  getName: function() {
+    var self = this;
+    //익명함수를 선언과 동시에 반환 
+    return function (){
+      console.log(self.name);
+    }
+  }
+}
+
+var callback = obj.getName();
+setTimeout( callback, 300);
+```
+보는거와같이 굳이 self 변수를 선언하고 this를 할당하는 모든 과정이 번거로워보인다. 
+조금만 더 생각해보며느, 위의 코드는 굉장히 불필요한 부분이 많이 들어갔다. 
+왜냐하면 this를 사용하지 않고서도 유저의 이름을 가져올 수 있다. 
+
+```javascript
+var obj = {
+  name: "sonia",
+  getName: function() {
+      console.log(obj.name);
+  }
+}
+
+var callback = obj.getName();
+setTimeout( callback, 300);
+```
+하지만 이코드 또한 약간에 문제가 있다. this를 사용하지 않다보니, this를 다양한 상황에서 재활용 할 수 없게 되었다.
+그래서 앞서 설명한 전통적인 방법의 this 우회가 많이 사용되고 있다. 
+
+### 2) arrow func을 활용한 this 우회 
+
+ES6가 호환되는 환경이라면 arrow func으로도 우회할 수 있으므로 우회해보자  
+
+```javascirpt
+var obj = {
+  name: "sonia",
+  getName: function() {
+    // 화살표함수를 선언과 동시에 반환 
+    return () => console.log(this.name);      
+  }
+}
+
+var callback = obj.getName();
+setTimeout( callback, 300);
+```
+코드가 굉장히 깔끔해 보인다. 화살표함수는 this 바인딩 자체가 없으므로 우회를 하지 않아.  
+확실히 코드가 깔끔해 보인다. ㅎㅎ 
