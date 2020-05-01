@@ -58,7 +58,8 @@ obj.vals.forEach(obj.logValues);
 
 ### 1) 변수를 활용한 this 우회 
 
-먼저 전통적인 방법인 변수를 활용하여 this를 우회해보자  
+1. 먼저 전통적인 방법인 변수를 활용하여 this를 우회해보자  
+
 ```javascript
 var obj = {
   name: "sonia",
@@ -75,8 +76,8 @@ var callback = obj.getName();
 setTimeout( callback, 300);
 ```
 보는거와같이 굳이 self 변수를 선언하고 this를 할당하는 모든 과정이 번거로워보인다. 
-조금만 더 생각해보며느, 위의 코드는 굉장히 불필요한 부분이 많이 들어갔다. 
-왜냐하면 this를 사용하지 않고서도 유저의 이름을 가져올 수 있다. 
+조금만 더 생각해보면, 위의 코드는 굉장히 불필요한 부분이 많이 들어갔다. 
+왜냐하면 this를 사용하지 않고서도 유저의 이름을 가져올 수 있다.  
 
 ```javascript
 var obj = {
@@ -90,9 +91,64 @@ var callback = obj.getName();
 setTimeout( callback, 300);
 ```
 하지만 이코드 또한 약간에 문제가 있다. this를 사용하지 않다보니, this를 다양한 상황에서 재활용 할 수 없게 되었다.
-그래서 앞서 설명한 전통적인 방법의 this 우회가 많이 사용되고 있다. 
+어떻게 재활용이 되는지에 대해 먼저 알아보자. 첫번째 예시의 코드에서 this를 재활용해보자 
 
-### 2) arrow func을 활용한 this 우회 
+```javascript
+var obj = {
+  name: "sonia",
+  getName: function() {
+    var self = this;
+    //익명함수를 선언과 동시에 반환 
+    return function (){
+      console.log(self.name);
+    }
+  }
+}
+
+var callback = obj.getName();
+setTimeout( callback, 300);
+
+var obj2 = {
+  name: "stark",
+  getName: obj.getName
+}
+
+var callback2 = obj2.getName();
+setTimeout( callback2, 300);
+
+
+var obj3 = {
+  name: "dk"
+}
+
+var callback3 = obj.getName.call(obj3);
+setTimeout( callback3, 300);
+```
+
+이렇게 obj.getName함수가 재활용 될 수 있었다. 이에 반해, 두번째로 설명한 예제는 obj로 값을 지정했기 때문에
+다른 객체를 바라볼수 있게 할 수 없다는 문제가 있다. 이에따라 전통적인 방법의 this 우회가 많이 사용되고 있다.
+
+### 2) bind 함수를 이용한 this 우회 
+
+전통적인 방법의 this 우회의 경우 어쩔수 없이 새로운 변수를 생성하고 할당해야한다는 아쉬움이 있었다.  
+이러한 문제를 해결해 보고자 ES5에서 사용하는 bind 함수가 등장하게 된다.  
+
+```javascript
+var obj = {
+  name: "sonia",
+  getName: function() {
+    console.log(this.name);      
+  }
+}
+setTimeout( obj.getName.bind(obj), 300 );
+
+var obj2 = { name : "sujin"};
+setTimeout( obj.getName.bind(obj2), 300);
+```
+
+이러한 방식으로 this를 바인딩할 수 있게 된다.  
+
+### 3) arrow func을 활용한 this 우회 
 
 ES6가 호환되는 환경이라면 arrow func으로도 우회할 수 있으므로 우회해보자  
 
