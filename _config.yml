@@ -37,8 +37,8 @@ nightMode: true
 
 # Comments 评论功能
 comments:
-  disqus: false
-  disqus_url: "https://liaokeyu.disqus.com/embed.js"
+  disqus: true
+  disqus_url: "https://ckdtjs505.disqus.com/embed.js"
 
 # MathJax 公式支持 by Ray-Eldath
 mathjax: true
@@ -81,7 +81,7 @@ RSS: false
 
 # Permalink
 # See: https://github.com/kaeyleo/jekyll-theme-H2O/issues/35
-permalink: /:year/:month/:day/:title.html
+# permalink: /:year/:month/:day/:title.html
 
 # Plugins
 plugins: [jekyll-paginate]
