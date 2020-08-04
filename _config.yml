@@ -2,7 +2,7 @@
 title: "소니아 개발 블로그"
 description: "주로 자바스크립트에 대해 다룹니다 ㅎㅎ"
 keyword: "javascript, react, nodejs"
-url: "" # your host
+url: "http://ckdtjs505.github.io" # your host
 
 # when build blog on server, if you don't need baseurl, you should leave this value blank.
 # 在服务器上建站时，如果你不需要子域名，请将这一格留空
@@ -56,10 +56,10 @@ postPatterns: "circuitBoard"
 # SNS settings 配置社交网站
 # url: email, weibo, zhihu, twitter, instagram, juejin, github, douban, facebook, dribble, uicn, jianshu, medium, linkedin
 sns:
-  weibo: "//weibo.com/lovecolcol"
-  juejin: "//juejin.im/user/57a6f434165abd006159b4cc"
-  instagram: "//www.instagram.com/steveliaocn"
-  github: "//github.com/kaeyleo"
+  # weibo: "//weibo.com/lovecolcol"
+  # juejin: "//juejin.im/user/57a6f434165abd006159b4cc"
+  # instagram: "//www.instagram.com/steveliaocn"
+  github: "//github.com/ckdtjs505"
 
 # Tags 设置标签
 recommend-tags: true # whether or not display recommend-tags on the sidebar
