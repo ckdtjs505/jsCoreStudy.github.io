@@ -1,6 +1,9 @@
 ---
-title: '[일기] 0720 '
-last_modified_at: 2020-07-01
+layout: post
+title: '[Development Tip #1] 개발자로서의 목표를 가져라'
+date: 2020-07-20
+tags: Tip
+comments: true
 share: true
 related: false
 ---
