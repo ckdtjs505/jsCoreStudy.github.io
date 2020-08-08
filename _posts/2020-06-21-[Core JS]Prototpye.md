@@ -1,11 +1,12 @@
 ---
-title: '[Js] 프로토타입'
-last_modified_at: 2020-06-21
+layout: post
+title: '[Core JS] 프로토타입이란?'
+date: 2020-06-21
+author: changsun oh
+tags: javascript CoreJS
+comments: true
 share: true
 related: false
-tags:
-  - javascript
-  - callback
 ---
 
 프로토타입!? 많이 생소한 단어다. 자바스크립트는 프로토타입 기반 언어라고들 하지만, 프로토 타입이 도대체 먼지 감을 잡기가 쉽지가 않다.

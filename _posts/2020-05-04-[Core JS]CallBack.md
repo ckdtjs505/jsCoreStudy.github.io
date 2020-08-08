@@ -1,11 +1,12 @@
 ---
-title: "[Js] 콜백함수"
-last_modified_at: 2020-05-02
+layout: post
+title: '[Core JS] 콜백함수?'
+date: 2020-05-04
+author: changsun oh
+tags: javascript CoreJS
+comments: true
 share: true
 related: false
-tags:
-  - javascript
-  - callback
 ---
 
 ## 콜백 함수

@@ -2,7 +2,7 @@
 layout: post
 title: '[JS] 코딩 기술 객체(object)편'
 date: 2020-07-29
-tags: javascript type
+tags: javascript skill-Js
 comments: true
 share: true
 related: false

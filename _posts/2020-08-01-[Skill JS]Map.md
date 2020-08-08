@@ -2,7 +2,7 @@
 layout: post
 title: '[JS] 코딩 기술 맵(map)편'
 date: 2020-08-01
-tags: javascript type
+tags: javascript skill-Js
 comments: true
 share: true
 related: false

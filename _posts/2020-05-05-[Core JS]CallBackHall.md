@@ -1,11 +1,12 @@
 ---
-title: '[Js] 콜백지옥'
-last_modified_at: 2020-05-02
+layout: post
+title: '[Core JS] 콜백지옥?'
+date: 2020-05-05
+author: changsun oh
+tags: javascript CoreJS
+comments: true
 share: true
 related: false
-tags:
-  - javascript
-  - callback
 ---
 
 앞서 콜백함수에 대해 알아보았다. 콜백함수를 간단하게 인자로 넘겨지는 함수로 배웠다.

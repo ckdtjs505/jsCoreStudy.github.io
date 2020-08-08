@@ -1,8 +1,9 @@
 ---
 layout: post
-title: '[JS] 데이터 타입'
-date: 2020-07-01
-tags: javascript type
+title: '[Core JS] 데이터 타입이란?'
+date: 2020-05-01
+author: changsun oh
+tags: javascript CoreJS
 comments: true
 share: true
 related: false

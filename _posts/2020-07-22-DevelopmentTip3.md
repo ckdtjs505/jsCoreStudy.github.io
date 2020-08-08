@@ -1,10 +1,9 @@
 ---
 layout: post
-title: '[JavaScript] hasOwnProperty 이란'
-subtitle: '자바스크립트의 hasOwnProperty에 대해 이해한다.'
-date: 2020-05-02
+title: '[Development Tip #3] 적절한 메서드를 발견하라'
+date: 2020-07-22
 author: changsun oh
-tags: javascript function hasOwnProperty
+tags: Tip 미완
 comments: true
 share: true
 related: false

@@ -1,3 +1,14 @@
+---
+layout: post
+title: '[Core JS] 실행컨텍스트란?'
+date: 2020-05-03
+author: changsun oh
+tags: javascript CoreJS
+comments: true
+share: true
+related: false
+---
+
 # jsCoreStudy
 자바스크립트 핵심 이해하기  
 

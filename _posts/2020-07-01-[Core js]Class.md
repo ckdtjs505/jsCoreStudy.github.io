@@ -1,13 +1,14 @@
 ---
-title: '[Js] 프로토타입'
-last_modified_at: 2020-07-01
+layout: post
+title: '[Core JS] 클래스란?'
+date: 2020-06-21
+author: changsun oh
+tags: javascript CoreJS
+comments: true
 share: true
 related: false
-tags:
-  - javascript
-  - class
-
 ---
+
 
 앞서 지금까지 프로토타입에 대해 배우면서 프로토타입을 참조함으로써 마치 상속받은 거처럼 구현되는 것처럼 보였지만,
 정확히는 js에서는 상속의 개념이 없다. 이에 상속이라는 개념에 익숙하기에 많은 개발자들을 혼란스럽게 했다.

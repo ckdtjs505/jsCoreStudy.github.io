@@ -1,6 +1,9 @@
 ---
-title: '[개발일지] 0722 '
-last_modified_at: 2020-07-22
+layout: post
+title: '[JS] 코딩 기술 변수 선언편'
+date: 2020-07-26
+tags: javascript skill-Js
+comments: true
 share: true
 related: false
 ---
@@ -14,5 +17,3 @@ related: false
 
 간단하게 `const`는 재할당이 불가능하며, `let`은 재할당이 가능하며, `var`는 재할당이 가능하지만 스코프의 범위가 함수로 지정된다. 
 각각에 대하여 조금 구체적으로 알고 싶으면 구글에 찾아보자 ㅎㅎ
-
-

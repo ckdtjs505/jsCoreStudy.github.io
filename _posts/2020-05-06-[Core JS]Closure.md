@@ -1,11 +1,12 @@
 ---
-title: '[Js] 클로져'
-last_modified_at: 2020-05-08
+layout: post
+title: '[Core JS] 클로저란?'
+date: 2020-05-06
+author: changsun oh
+tags: javascript CoreJS
+comments: true
 share: true
 related: false
-tags:
-  - javascript
-  - closure
 ---
 
 클로저는 함수와 함수가 선언된 어휘적 환경의 조합이다. [`출처 : MDN`](https://developer.mozilla.org/ko/docs/Web/JavaScript/Guide/Closures), JS 대표 사이트인 MDN에서의 설명이다. 정의만 가지고는 이해하기 쉽지 않다. 왜냐하면 우리는 어휘적 환경이 어떤 의미를 가지고 있는지 모르기 때문이다. 

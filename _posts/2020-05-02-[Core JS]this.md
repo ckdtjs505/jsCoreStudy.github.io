@@ -1,3 +1,14 @@
+---
+layout: post
+title: '[Core JS] this란?'
+date: 2020-05-02
+author: changsun oh
+tags: javascript CoreJS
+comments: true
+share: true
+related: false
+---
+
 # this
  [`this 이해하기`](https://github.com/ckdtjs505/jsCoreStudy/blob/master/this.md#this-%EC%9D%B4%ED%95%B4%ED%95%98%EA%B8%B0)  
   1) [`함수 this` → 전역 객체](https://github.com/ckdtjs505/jsCoreStudy/blob/master/this.md#%ED%95%A8%EC%88%98-this---window-%EA%B0%9D%EC%B2%B4)  

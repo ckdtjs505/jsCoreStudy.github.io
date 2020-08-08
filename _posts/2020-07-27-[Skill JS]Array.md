@@ -2,7 +2,7 @@
 layout: post
 title: '[JS] 코딩 기술 배열(Array)편'
 date: 2020-07-27
-tags: javascript type
+tags: javascript skill-Js
 comments: true
 share: true
 related: false
