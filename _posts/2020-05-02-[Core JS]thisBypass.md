@@ -105,7 +105,9 @@ func.call({ a:1 }, 1,2,3); // this를 {a:1}로 명시적으로 변경
 
 
  * call 메서드는 유사배열객체 NodeList 배열변환시 많이 사용된다.
-
+   * ES6에서는 Array.from()를 사용해 변활 할 수 있다. 
+   * ES6에서는 펼침연산자( ... )를 사용해 변환 한다.
+  
 ```html
 <div data-number="5"> 5 </div>
 <div data-number="15"> 15 </div>
@@ -113,13 +115,24 @@ func.call({ a:1 }, 1,2,3); // this를 {a:1}로 명시적으로 변경
 ```
 
 ```javascript
+// call 메서드를 이용한 배열 변환 
 var aDiv = Array.prototype.slice.call(document.querySelectorAll("div")) //변환
   .map( function(ele){ return Number(ele.dataset.number)});
 
+// Array.from()을 사용한 배열 변환
+var aDivFrom = Array.from( document.querySelectorAll("div") )
+  .map( function(ele){ return Number(ele.dataset.number)});
+
+// 펼침연산자 ... 를 사용한 배열 변환 
+var aDivSpread = [ ...document.querySelectorAll("div") ] 
+  .map( function(ele){ return Number(ele.dataset.number)});
+
+console.log(aDiv, aDivFrom, aDivSpread);
+
 /* 실행결과 
-5
-15
-25
+  5
+  15
+  25
 */
 ```
 1. document.querySelectorAll("div")는 유사배열 객체이다. 
@@ -130,24 +143,36 @@ var aDiv = Array.prototype.slice.call(document.querySelectorAll("div")) //변환
 6. 배열함수인 map을 이용하여 data-number의 값을 가져올수 있게 된다.
 
 * call 메서드를 활용하여 전달인자(arguments)를 배열로 변환할수 있다.
+   * ES6에서는 Array.from()를 사용해 변활 할 수 있다. 
+   * ES6에서는 펼침연산자( ... )를 사용해 변환 한다.
 
 ```javascript
 function func(){
-  var argv = Array.slice.call(arguments);
+  // call 메서드를 이용한 배열 변환 
+  var argv = Array.prototype.slice.call(arguments);
   argv.forEach( ele => {
+    console.log(ele);
+  }); 
+  // Array.from()을 사용한 배열 변환
+  var argvFrom = Array.from(arguments);
+  argvFrom.forEach( ele => {
+    console.log(ele);
+  }); 
+  // 펼침연산자 ... 를 사용한 배열 변환 
+  var argvSpread = [ ...arguments];
+  argvSpread.forEach( ele => {
     console.log(ele);
   }); 
 }
 
 func(1,2,3,4,5);
 
-/* 
-실행결과 
-1
-2
-3
-4
-5
+/* 실행결과 
+  1
+  2
+  3
+  4
+  5
 */
 ```
  1. arguments는 배열객체가 아니므로 forEach메서드가 없다.
@@ -162,7 +187,8 @@ func(1,2,3,4,5);
  * apply 메서드는 call메서드와 다르게 인자로 배열을 전달한다.  
  * 인자로 배열을 넘길 때는 apply 함수가 유용하다.  
  * apply메서드는 형변화에 유용하다.  
-   * ES6에서 **Array.from** 메서드가 유사배열 객체를 배열로 변환해 주고 있다.  
+   * ES6에서는 Array.from()를 사용해 변활 할 수 있다. 
+   * ES6에서는 펼침연산자( ... )를 사용해 변환 한다.
 
 ```javascript
 let func = function ( a, b, c) {
@@ -183,22 +209,24 @@ let values = [1, 5, 2, 3, 9];
  // 굳이 this를 바인딩 할 필요가 없으므로 null값을 입력
 let max = Math.max.apply(null, values);
 let min = Math.min.apply(null, values);
+
+// 펼침연산자 ... 를 사용한 배열 변환 
+let maxSpread = Math.max(...values);
+let minSpread = Math.min(...values);
+
 console.log(max,min);
+console.log(maxSpread,minSpread);
 
 /* 실행결과
 9, 1
 */
 ```
 
-```javascript 
-let max = Math.max(...values);
-let min = Math.min(...values);
-console.log(max,min);
-```
-
 ### 3. bind  
 
-> 메서드가 호출되면 새로운 함수를 생성, 첫 인자는 `this` 키워드를 설정 [출처 MDN](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Function/bind)
+> 메서드가 호출되면 새로운 함수를 생성, 첫 인자는 **this** 키워드를 설정 [출처 MDN](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Function/bind)
+
+ * bind 메서드는 **this**인자로 넘겨 새로운 함수를 반환한다. 
 
 ```javascript
 let func = function(a,b,c){
@@ -209,5 +237,3 @@ func(1,2,3,4);
 let bindFunc = func.bind({ x : 1});
 bindFunc(1,2,3,4);
 ```
-
-
