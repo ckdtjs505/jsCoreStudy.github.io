@@ -9,123 +9,23 @@ share: true
 related: false
 ---
 
-클로저는 함수와 함수가 선언된 어휘적 환경의 조합이다. [`출처 : MDN`](https://developer.mozilla.org/ko/docs/Web/JavaScript/Guide/Closures), JS 대표 사이트인 MDN에서의 설명이다. 정의만 가지고는 이해하기 쉽지 않다. 왜냐하면 우리는 어휘적 환경이 어떤 의미를 가지고 있는지 모르기 때문이다. 
+## 목표 
+* 클로저의 의미 및 원리를 이해한다. 
+* 클로저의 문제점과 해결방법을 이해한다.
+* 클로저의 다양한 사용방법을 이해한다.
+* 
 
-### 어휘적 환경`LexicalEnvironment`이란?
 
-먼저 문자 그대로 의미를 살펴보자, `어휘적` + `환경`으로 영어로하면 `lexcial` + `Environment`이다.
-`LexicalEnvironment`는 **실행 컨텍스트편** 에서 배웠다. 실행 컨텍스트에서 `LexicalEnvironment`는 유효범위인 스코프가 결정되며, 
-스코프 체인이 가능하게 하는 역할을 한다고 배웠다. `LexicalEnvironment`으로 인해 스코프가 어떻게 동작하는지 확인해보자.
+## 클로저란? 
+* 클로저는 함수와 함수가 선언된 **어휘적 환경**의 조합이다. [출처 : MDN](https://developer.mozilla.org/ko/docs/Web/JavaScript/Guide/Closures)
 
-```javascript
-var name = 'global';
-var log = function () {
-  console.log(name);
-}
+> 어휘적 환경 **LexicalEnvironment**이란 ?  
+> 실행 컨텍스트에서 **LexicalEnvironment**는 유효범위인 스코프가 결정되며, 스코프 체인이 가능하게 하는 역할을 한다. 
 
-var outer = function() {
-  name = 'outer';
-  log();
-}
-outer();
-```
-
-1. 전역 컨텍스트 생성
-  `LexicalEnvironment`
-   environmentRecord : { name : 'global', log : f, outer : f}
-   outerEnvironment : {}
-   
-2. outer 컨텍스트 생성 
-  `LexicalEnvironment`
-   environmentRecord : {}
-   outerEnvironment : { name : 'global' -> 'outer', log : f, outer : f }
-
-3. log 컨텍스트 생성 
-   `LexicalEnvironment`
-   environmentRecord : {}
-   outerEnvironment : { name : 'global' -> 'outer', log : f, outer : f }
-
-log()는 outer를 출력하게된다. 
-
-위 코드를 약간만 수정해보자. 
-
-```javascript
-var name = 'global';
-var log = function () {
-  console.log(name);
-}
-
-var outer = function() {
-  var name = 'outer';
-  log();
-}
-outer();
-```
-
-1. 전역 컨텍스트 생성
-  `LexicalEnvironment`
-   environmentRecord : { name : 'global', log : f, outer : f}
-   outerEnvironment : {}
-   
-2. outer 컨텍스트 생성 
-  `LexicalEnvironment`
-   environmentRecord : { name : 'outer' }
-   outerEnvironment : { name : 'global', log : f, outer : f}
-
-3. log 컨텍스트 생성 
-   `LexicalEnvironment`
-   environmentRecord : {}
-   outerEnvironment : { name : 'global', log : f, outer : f}
-
-log 컨텍스트에서 name은 'global'이므로 global을 출력하게 된다. 
-이러한 현상으로 `스코프가 함수가 호출할 때가 아니라 선언할 때` 생긴다고 말씀하시는 분들도 있지만,
-그것보다는 실행 컨텍스트가 어떻게 동작하는지 이해하고 접근한다면 훨씬 도움이 될꺼라 믿습니다. 
-
-### 클로저란? 
-
-> 클로저는 함수와 함수가 선언된 `어휘적 환경`의 `조합` 
-
-예시로 좀더 정확하게 이해해보자. 
-
-```javascript
-function outer() {
-  function inner(){
-    console.log(++a);
-  }
-  var a = 1;
-  inner();
-  console.log(a);
-}
-outer(); 
-```
-
-즉 내부함수에서 외부함수의 변수에 접근할 수 있는 것이 바로 클로저의 역할이다.
-
-```javascript
-function outer() {
-  var a = 0;
-  function inner(){
-    console.log(++a);
-  }
-  return inner();
-}
-outer(); 
-outer();
-
-실행결과 
-1
-1
-
-8번째줄 outer 함수를 실행하면서 변수 a에 0을 할당한다 
-이후 inner 함수에서 outer 함수 변수 a에 접근하여 1을 증가한값인 1을 출력한다. 
-9번째줄 또한 outer 함수를 새로 실행하면서 변수 a에 0을 할당한다.
-이후 동일하게 inner 함수에서 outer 함수 변수 a에 접근하여 1을 증가한값인 1을 출력한다. 
-```
-
-outer 함수가 종료된 이후에 inner함수를 호출할수 없는 코드이다. 
-어찌보면 너무 당연한 말이지만, 이런경우도 있을수 있다. 
-어떤경우에는 outer 함수가 종료된 이후에도 inner 함수를 호출 할 수 있다.
-코드로 살펴보자. 
+* 어떤 함수 A에서 선언하 변수 a를 참조하는 내부함수 B를 외부로 전달하는 경우 A의 실행 컨텍스트가 종료된 이후에도 변수 a가 사라지지 않는 현상 
+  
+* 이미 생명 주기가 끝난 외부 함수의 변수를 참조하는 함수 
+* 가비지 컬렉터는 어떤 값을 참조하는 값이 하나라도 있다면 그 값을 수집 대상에 포함시키지 않기 때문.
 
 ```javascript
 function outer() {
@@ -139,26 +39,19 @@ var smallInner = outer();
 smallInner();
 smallInner();
 
-실행결과
-1
-2
-
-8번째 줄 outer 함수를 실행하면서 변수 a에 0을 할당하고 inner 함수를 반환한다.
-smallInner에는 inner함수가 들어가게 된다. 
-이후 9번째 줄 smallInner가 변수 a에 접근 후 1을 증가하여 1을 출력한다. 
-이후 10번째 줄 smallInner가 변수 a에 접근 후 1을 증가하여 2을 출력한다.
+/*
+  실행결과
+  1
+  2
+*/
 ```
- inner함수가 outer함수가 종료된 이후에도 outer함수의 변수에 접근할 수 있다는 점이 신기하다.
- 이런 기능이 가능한 이유는 바로 가비지 컬렉터의 역할 때문인데, 가비지 컬렉터는 어떤 값을 참조하는
- 값이 하나라도 있다면 그 값을 수집 대상에 포함시키지 않기 때문이다.
+1. 8번째 줄 outer 함수를 실행하면서 변수 a에 0을 할당하고 inner 함수를 smallInner에 반환.
+2. 9번째 줄 smallInner가 변수 a에 접근 후 1을 증가하여 1을 출력. 
+3. 10번째 줄 smallInner가 변수 a에 접근 후 1을 증가하여 2을 출력.
 
-즉 정리하면 
-> 클로저란 어떤 함수 A에서 선언한 변수 a를 참조하는 내부함수 B를 외부로 전달할 경우
-> A의 실행 컨텍스트가 종료된 이후에도 변수 a가 사라지지 않는 현상을 말한다.
+> outer에서 선언된 변수 a가 사라졌음에도 inner 함수에서 접근하여 값이 증가 되는것을 확인할 수 있다.
 
-위의 예시만 봤을때 약간의 오해의 소지가 있다.
-가장큰 오해의 소지로는 외부 변수를 참조하는 내부변수는 `return`한 경우에만 있다고 생각 한다.
-`return` 없이도 클로저가 발생하는 다양한 경우를 예시로 확인해보자 
+## 클로저를 활용한 
 
 첫째 setInterval/setTiemout
 ```javascript
