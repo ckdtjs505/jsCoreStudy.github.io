@@ -13,19 +13,85 @@ related: false
 * 클로저의 의미 및 원리를 이해한다. 
 * 클로저의 문제점과 해결방법을 이해한다.
 * 클로저의 다양한 사용방법을 이해한다.
-* 
 
 
 ## 클로저란? 
 * 클로저는 함수와 함수가 선언된 **어휘적 환경**의 조합이다. [출처 : MDN](https://developer.mozilla.org/ko/docs/Web/JavaScript/Guide/Closures)
+> **어휘적 환경(LexicalEnvironment)**은 실행 컨텍스트에서 유효범위인 스코프가 결정되며, 스코프 체인이 가능하게 하는 역할을 한다. 
 
-> 어휘적 환경 **LexicalEnvironment**이란 ?  
-> 실행 컨텍스트에서 **LexicalEnvironment**는 유효범위인 스코프가 결정되며, 스코프 체인이 가능하게 하는 역할을 한다. 
-
-* 어떤 함수 A에서 선언하 변수 a를 참조하는 내부함수 B를 외부로 전달하는 경우 A의 실행 컨텍스트가 종료된 이후에도 변수 a가 사라지지 않는 현상 
-  
+* 어떤 함수 A에서 선언한 변수 a를 참조하는 내부함수 B를 외부로 전달하는 경우 A의 실행 컨텍스트가 종료된 이후에도 변수 a가 사라지지 않는 현상 
 * 이미 생명 주기가 끝난 외부 함수의 변수를 참조하는 함수 
-* 가비지 컬렉터는 어떤 값을 참조하는 값이 하나라도 있다면 그 값을 수집 대상에 포함시키지 않기 때문.
+* GC(가비지 컬렉터)는 참조하는 값이 하나라도 있다면 그 값을 수집 대상에 포함시키지 않기 때문.
+
+## 클로저 예시  
+### 1. return을 이용한 클로저 
+```javascript
+  function outer() {
+    let a = 0;
+    function inner(){
+      console.log(++a);
+    }
+    return inner;
+  }
+  let smallInner = outer(); 
+  smallInner();
+  smallInner();
+
+  /*
+    실행결과
+    1
+    2
+  */
+```
+   1. 8번째 줄 outer 함수를 실행하면서 변수 a에 0을 할당하고 inner 함수를 smallInner에 반환.
+   2. 9번째 줄 smallInner가 변수 a에 접근 후 1을 증가하여 1을 출력. 
+   3. 10번째 줄 smallInner가 변수 a에 접근 후 1을 증가하여 2을 출력.
+
+
+  > outer에서 선언된 변수 a가 사라졌음에도 inner 함수에서 접근하여 값이 증가 되는것을 확인할 수 있다.
+
+### 2. setInterval의 콜백 함수 이용한 클로저
+```javascript
+function outer () {
+  let a = 0;
+  let intarvalId = null;
+  let inner = function(){
+    if( a < 5)
+      console.log(++a);
+    else
+      clearInterval(intarvalId);
+  };
+  intarvalId = setInterval(inner, 1000);
+}
+outer();
+/*
+  실행결과 
+  1  2  3  4  5
+*/
+```
+> setInterval 함수의 첫번째 인자로 콜백함수인 inner 함수를 매개변수로 전달한다. 클로저가 발생하여 외부함수에 a 변수를 찾고, 외부함수 outer에 a가 할당 되어 있으므로, a를 참조하여 실행한다. 
+
+### 3. addEventListener의 콜백 함수 이용한 클로저
+```javascript
+function outer(){
+  let count = 0;
+  const button = document.createElement('button');
+  button.innerHTML = "CLICK";
+  button.addEventListener("click", function inner() {
+    console.log(++count);
+  })
+  
+  document.body.appendChild(button);
+}
+
+outer();
+// CLICK 버튼 클릭시 count 값 증가출력
+```
+> button dom을 생성하여 inner함수로 이벤트를 등록한다. inner함수는 count값을 증가후 console에 출력하는데, 이때 클로저가 발생하여 outer count에 접근하여 count값을 증가하여 출력할 수 있게 된다. 
+
+## 클로저와 메모리 누수 
+* 클로저 사용시 특정 변수를 참조하여 **GC(가비지 컬렉터)**의 수거 대상이 되지 않아 메모리의 누수 발생
+* GC의 수거 대상이 되도록 참조 카운트를 0 (NULL, undefined)으로 할당  
 
 ```javascript
 function outer() {
@@ -38,6 +104,7 @@ function outer() {
 var smallInner = outer(); 
 smallInner();
 smallInner();
+smallInner = null;
 
 /*
   실행결과
@@ -45,76 +112,15 @@ smallInner();
   2
 */
 ```
-1. 8번째 줄 outer 함수를 실행하면서 변수 a에 0을 할당하고 inner 함수를 smallInner에 반환.
-2. 9번째 줄 smallInner가 변수 a에 접근 후 1을 증가하여 1을 출력. 
-3. 10번째 줄 smallInner가 변수 a에 접근 후 1을 증가하여 2을 출력.
+> smallInner를 null로 참조 하여 GC의 수거 대상이 되도록 한다. 
 
-> outer에서 선언된 변수 a가 사라졌음에도 inner 함수에서 접근하여 값이 증가 되는것을 확인할 수 있다.
-
-## 클로저를 활용한 
-
-첫째 setInterval/setTiemout
-```javascript
-function outer () {
-  var a = 0;
-  var intarvalId = null;
-  var inner = function(){
-    if( a < 5)
-      console.log(++a);
-    else
-      clearInterval(intarvalId);
-  };
-  intarvalId = setInterval(inner, 1000);
-}
-outer();
-
-실행결과 
-1
-2
-3
-4
-5
-
-setInterval 함수의 첫번째 인자로 콜백함수인 inner 함수를 매개변수로 전달한다.
-이때에도 클로저가 발생하여 외부함수에 a 변수를 찾고, 외부함수 outer에 a가 할당 되어 있으므로, 
-a를 참조하여 실행한다. 
-```
-
-둘째 eventListenser
-```javascript
-function outer(){
-  var count = 0;
-  const button = document.createElement('button');
-  button.innerHTML = "CLICK";
-  button.addEventListener("click", function inner() {
-    console.log(++count);
-  })
-  
-  document.body.appendChild(button);
-}
-
-outer();
-실행결과 
-CLICK 버튼 클릭시 count 값 증가출력
-
-button dom을 생성하여 이벤트를 생성한다. 이벤트 실행시 콜백함수로 inner함수를 실행하게된다.
-inner함수는 count값을 증가후 console에 출력하는데, 이때 클로저가 발생하여 outer count에 접근하여
-count값을 증가하여 출력할 수 있게 된다. 
-```
-
-> 이렇게 클로저는 return이라는 특수한 상황에만 발생하는 것이 아니다. 
 
 
 ### 클로저와 메모리 관리
-지금까지 클로저에 대해 간단하게 알아보았다. 클로저로 실행이 끝난 외부 함수의 변수에 접근 할 수 있수 있다 배웠다.
-좀더 정확하게는 `가비지 컬렉터`가 어떤 값을 하나라도 참조하는 값이 있다면, 그 값은 수집 대상에 포함시키지 않게 된다. 
-이에따라 클로저를 사용하게 될수록 메모리 누수가 발생하게 된다. 이런 이유로 클로저 사용을 조심해야한다는 사람들도 있다.
+지금까지 클로저에 대해 간단하게 알아보았다. 클로저로 실행이 끝난 외부 함수의 변수에 접근 할 수 있수 있다 배웠다.좀더 정확하게는 **가비지 컬렉터**가 어떤 값을 하나라도 참조하는 값이 있다면, 그 값은 수집 대상에 포함시키지 않게 된다. 이에따라 클로저를 사용하게 될수록 메모리 누수가 발생하게 된다. 이런 이유로 클로저 사용을 조심해야한다는 사람들도 있다.
 
 이러한 메모리 누수를 해결하기 위한 간단한 관리방법을 알아보자. 
-관리방법이라고 하니 엄청나 보이지만, 아주 간단하다. 클로저를 통해 접근한 지역변수를 다 사용했다면 메모리를 소모하지 않도록
-참조 카운트를 0으로 만들면 된다. 그러면 언젠가 `가비지 컬렉터`가 수거해 갈 것이고, 소모되었던 메모리는 회수되게 된다. 
-참조 카운트를 0으로 만드는 방법으로 `참조형`이 아닌 `기본형`데이터(null, undefined)를 할당하게된다. 
-참조 카운트에 `기본형`데이터를 넣는다는것은 이전에 참조하고 있던 함수를 끊는다는 것과 동일한 의미를 가진다. 
+관리방법이라고 하니 엄청나 보이지만, 아주 간단하다. 클로저를 통해 접근한 지역변수를 다 사용했다면 메모리를 소모하지 않도록 참조 카운트를 0으로 만들면 된다. 그러면 언젠가 **가비지 컬렉터**가 수거해 갈 것이고, 소모되었던 메모리는 회수되게 된다. 참조 카운트를 0으로 만드는 방법으로 **참조형**이 아닌 **기본형**데이터(null, undefined)를 할당하게된다. 참조 카운트에 **기본형**데이터를 넣는다는것은 이전에 참조하고 있던 함수를 끊는다는 것과 동일한 의미를 가진다. 
 
 앞에서 배웠던 예시들에 메모리 해제 코드를 추가해보자. 
 
@@ -156,7 +162,7 @@ function outer(){
   button.addEventListener("click", function inner() {
     console.log(++count);
   })
-  // 카운트의 제한이 없으므로 실별자의 참조를 끊을 수 없다.
+  // 카운트의 제한이 없으므로 식별자의 참조를 끊을 수 없다.
   document.body.appendChild(button);
 }
 ```
