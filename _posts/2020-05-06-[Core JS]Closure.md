@@ -95,13 +95,13 @@ outer();
 
 ```javascript
 function outer() {
-  var a = 0;
+  let a = 0;
   function inner(){
     console.log(++a);
   }
   return inner;
 }
-var smallInner = outer(); 
+let smallInner = outer(); 
 smallInner();
 smallInner();
 smallInner = null;
@@ -113,8 +113,6 @@ smallInner = null;
 */
 ```
 > smallInner를 null로 참조 하여 GC의 수거 대상이 되도록 한다. 
-
-
 
 ### 클로저와 메모리 관리
 지금까지 클로저에 대해 간단하게 알아보았다. 클로저로 실행이 끝난 외부 함수의 변수에 접근 할 수 있수 있다 배웠다.좀더 정확하게는 **가비지 컬렉터**가 어떤 값을 하나라도 참조하는 값이 있다면, 그 값은 수집 대상에 포함시키지 않게 된다. 이에따라 클로저를 사용하게 될수록 메모리 누수가 발생하게 된다. 이런 이유로 클로저 사용을 조심해야한다는 사람들도 있다.
@@ -168,16 +166,13 @@ function outer(){
 ```
 
 ## 클로저의 활용 사례
-지금까지 클로저에 대하 알아보았다. 클로저는 특정 조건에서 변수가 사라지지 않는 현상으로 배웠다. 그리고 변수가 사라지지
-않아 메모리 누수가 있어 이러한 메모리 누수를 해결하는 방법 또한 알아보았다. 지금 부터는 배운 내용을 활용해보자.
-
 ### 첫째. 콜백 함수 내부에서 외부 데이터를 사용할때
 ```javascript 
-var items = ["faith", "love", "hope"];
-var $ul = document.createElement('ul');
+let items = ["faith", "love", "hope"];
+let $ul = document.createElement('ul');
 
 items.forEach(function(item){
-  var $li = document.createElement('li');
+  let $li = document.createElement('li');
   $li.innerHTML = item;
   
   $li.addEventListener('click', function(){
@@ -189,89 +184,98 @@ items.forEach(function(item){
 
 document.body.appendChild($ul);
 ```
-4번째줄 익명의 콜백함수는 items의 개수만큼 반복 후 종료한다. 
-8번째줄 익명의 콜백함수는 item라는 외부변수를 사용하고 있으므로 클로저가 있다.
-이에따라 4번째줄의 콜백함수의 실행컨텍스트가 끝났음에도 외부 변수인 item 에 접근할수 있게된다.
+1. 4번째줄 익명의 콜백함수는 items의 개수만큼 반복 후 종료한다.
+2. 8번째줄 익명의 콜백함수는 item라는 외부변수를 사용하고 있으므로 클로저가 있다.
+3. 4번째 줄의 콜백함수의 실행컨텍스트가 끝났음에도 외부 변수인 item 에 접근할수 있게된다.
 
 더나아가 8번째 줄 함수가 콜백 함수로만 쓰이는 것이 아니라, 다양하게 쓰이게 된다면 외부로 분리해야 하는 경우가 생긴다. 
-```javascript
-var items = ["faith", "love", "hope"];
-var $ul = document.createElement('ul');
 
-var alertItem = function(item){
+```javascript
+let items = ["faith", "love", "hope"];
+let $ul = document.createElement('ul');
+
+let alertItem = function(item){
   alert('click' + item);
 }
 
 items.forEach(function(item){
-  var $li = document.createElement('li');
+  let $li = document.createElement('li');
   $li.innerHTML = item;
   $li.addEventListener('click', alertItem);
   $ul.appendChild($li);
 })
 
 document.body.appendChild($ul);
+/* 
+  실행결과
+  click[object MouseEvent]
+*/
 ```
-실행결과 => click[object MouseEvent]
+> 의도하지 않았던 [object MouseEvent]라는 값이 나왔다. 그 이유는 왜냐하면 콜백함수의 첫번째 인자는 addEventListener가 주입하기 때문이다. 이러한 문제를 해결하기 위해서, 함수를 반환하고 인자의 값을 바꿀수 있도록 도와주는 bind 메서드를 활용하여 간단하게 수정할 수 있다.
 
-라는 만족스럽지 못한 결과를 가져온다. 
-왜냐하면 콜백함수의 첫번째 인자는 addEventListener가 주입하기 때문이다. 
-이러한 문제를 해결하기 위해서, 함수를 반환하고 인자의 값을 바꿀수 있도록 도와주는 
-bind 메서드를 활용하여 간단하게 수정할 수 있다.
 ```javascript
-var items = ["faith", "love", "hope"];
-var $ul = document.createElement('ul');
+let items = ["faith", "love", "hope"];
+let $ul = document.createElement('ul');
 
-var alertItem = function(item){
+let alertItem = function(item){
   alert('click' + item);
+  console.log(this); // null 출력
 }
 
 items.forEach(function(item){
-  var $li = document.createElement('li');
+  let $li = document.createElement('li');
   $li.innerHTML = item;
   $li.addEventListener('click', alertItem.bind(null, item));
   $ul.appendChild($li);
 })
 
 document.body.appendChild($ul);
+/* 
+  실행결과 
+  faith 클릭시 - clickfaith 
+  love 클릭시 - lovefaith 
+  hope 클릭시 - hopefaith 
+*/
 ```
-하지만 this의 값이 바뀐다는 아쉬운 부분도 존재한다. 
-
-this값이 바뀌면 안된다면, 고차함수를 활용하여 해결할 수 있다.
+> bind를 이용하여 다른 객체를 주입하는 문제를 해결했지만, 하지만 this의 값이 바뀐다는 아쉬운 부분도 존재한다. this값이 바뀌면 안된다면, 고차함수를 활용하여 해결할 수 있다.
 
 ```javascript
-var items = ["faith", "love", "hope"];
-var $ul = document.createElement('ul');
+let items = ["faith", "love", "hope"];
+let $ul = document.createElement('ul');
 
-var alertItem = function(item){
+let alertItem = function(item){
   return function() {
     alert('click' + item);
+    console.log(this); // 선택된 dom 출력
   } 
 }
 
 items.forEach(function(item){
-  var $li = document.createElement('li');
+  let $li = document.createElement('li');
   $li.innerHTML = item;
   $li.addEventListener('click', alertItem(item));
   $ul.appendChild($li);
 })
 
 document.body.appendChild($ul);
-```
-alertItem은 함수를 리턴한다. 리턴된 함수는 alert을 띄어주게된다. 
-이때 item 값은 외부변수의 값을 참조하여 만들어지므로 클로저가 존재한다. 
 
-이렇게 콜백 함수 내부에서, 외부 데이터를 사용하는 방법에 대해 알아보았다. 
+/* 
+  실행결과 
+  faith 클릭시 - clickfaith 
+  love 클릭시 - lovefaith 
+  hope 클릭시 - hopefaith 
+*/
+```
+> alertItem은 함수를 리턴한다. 리턴된 함수는 alert을 띄어주게된다. 이때 item 값은 외부변수의 값을 참조하여 만들어지므로 클로저가 존재한다. 이렇게 콜백 함수 내부에서, 외부 데이터를 사용하는 방법에 대해 알아보았다. 
 
 ### 둘째. 접근 권한 제어
-`접근 권한`에는 `public`,`private`,`protected`로 총 3가지로 구성되어있다. 
-간단하게 `public`은 내부 외부에서 모두 접근이 가능하며, `private`는 내부에서만 사용되고 외부에서는 
-노출되지도 않아 접근조차 하지 못하게 하는 것을 의미한다. 
-
-클로저는 외부 함수의 변수에 접근하는 현상을 의미하는데, return으로 외부 함수의 변수 접근할 수 있다는 걸 배웠다.
-이처럼 클로저를 활용하면 외부 스코프에서 특정 함수 내부의 특정 변수에 대한 접근 권한을 부여할 수 있게 된다.
-즉 return한 변수들은 `public`데이터가 되고, return 되지 않은 변수들은 `private`데이터가 된다. 
-
-> return한 변수들은 `public`데이터가 되고, return 되지 않은 변수들은 `private`데이터가 된다. 
+* js의 **접근 권한**에는 **public**,**private**,**protected**로 구성되어있다. 
+  * **public**은 내부 외부에서 모두 접근이 가능
+  * **private**는 내부에서만 접근이 가능, 외부에서는 노출되지도 않아 접근하지 못함
+*  return한 변수들은 **public**데이터가 되고, return 되지 않은 변수들은 **private**데이터가 된다. 
+   * return한 변수들은 공개 변수이며, 그렇지 않음 변수들은 비공개 변수가 된다.
+* 클로저는 return 으로 외부 함수의 변수 접근할 수 있기 때문
+* 클로저는 외부 스코프에서 특정 함수 내부의 특정 변수에 대한 접근 권한을 부여할 수 있다
 
 ```javascript
 function outer() {
@@ -285,20 +289,13 @@ function outer() {
 var outer2 = outer();
 outer2();
 ```
-앞서 공부했던 예시이다. outer함수는 외부로 부터 철저히 격리된 공간이다. 
-outer함수를 실행할수는 있지만, outer함수 내부의 변수에는 접근할수 없다. 
-만약 outer함수의 내부의 변수를 변경하고 싶으면 outer함수가 return한 정보로만 
-접근 및 변경 할 수 있게 된다. 
+> outer함수는 외부로 부터 철저히 격리된 공간이다. outer함수를 실행할수는 있지만, outer함수 내부의 변수에는 접근할수 없다. 만약 outer함수의 내부의 변수를 변경하고 싶으면 outer함수가 return한 정보로만 접근 및 변경 할 수 있게 된다. 
 
-inner함수는 내부 외부에서 모두 접근이 가능하고, outer함수의 a는 내부에서만 접근이 가능하므로
-`public`데이터는 **inner()** 함수이며, `private`데이터는 **a** 임을 알수있다.
-
-> return한 변수들은 공개 변수이며, 그렇지 않음 변수들은 비공개 변수가 된다.
+inner함수는 내부 외부에서 모두 접근이 가능하고, outer함수의 a는 내부에서만 접근이 가능하므로 **public**데이터는 **inner()** 함수이며, **private**데이터는 **a** 임을 알수있다.
 
 ### 셋째. 부분 적용 함수
 부분 적용 함수는 문자 그대로 부분만 적용하여 기억하는 함수이다. 
-다시말해 10개의 인자를 받는 함수가 있는데, 미리 5개의 인자만 받아 기억했다가 나중에 5개의 인자를
-받으면 실행 결과를 얻을수 있게 되는 함수이다. this 우회할때 배웠던 bind 메서드의 실행결과 경우에 따라 부분 적용 함수가 된다. 
+다시말해 10개의 인자를 받는 함수가 있는데, 미리 5개의 인자만 받아 기억했다가 나중에 5개의 인자를 받으면 실행 결과를 얻을수 있게 되는 함수이다. this 우회할때 배웠던 bind 메서드의 실행결과 경우에 따라 부분 적용 함수가 된다. 
 
 ```js
 var add = function(){
@@ -312,8 +309,7 @@ var add = function(){
 var addPartial = add.bind(null, 1, 2, 3, 4, 5); // bind 함수로 저장 
 console.log(addPartial(6, 7, 8, 9, 10)) 
 ```
-물론 위와 같은 방법으로 부분적용함수를 구현할 수 있으나, 실무에서 this의 값이 변경되는건 리스크다 크다. 
-따라서 클로저를 활용하여 this의 값이 변경되지 않도록 구현해보자. 
+물론 위와 같은 방법으로 부분적용함수를 구현할 수 있으나, 실무에서 this의 값이 변경되는건 리스크다 크다. 따라서 클로저를 활용하여 this의 값이 변경되지 않도록 구현해보자. 
 
 ```js
 var partial = function(){
