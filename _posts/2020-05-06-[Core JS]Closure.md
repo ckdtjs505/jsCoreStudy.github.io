@@ -294,29 +294,36 @@ outer2();
 inner함수는 내부 외부에서 모두 접근이 가능하고, outer함수의 a는 내부에서만 접근이 가능하므로 **public**데이터는 **inner()** 함수이며, **private**데이터는 **a** 임을 알수있다.
 
 ### 셋째. 부분 적용 함수
-부분 적용 함수는 문자 그대로 부분만 적용하여 기억하는 함수이다. 
-다시말해 10개의 인자를 받는 함수가 있는데, 미리 5개의 인자만 받아 기억했다가 나중에 5개의 인자를 받으면 실행 결과를 얻을수 있게 되는 함수이다. this 우회할때 배웠던 bind 메서드의 실행결과 경우에 따라 부분 적용 함수가 된다. 
+* 부분 적용 함수는 문자 그대로 부분만 적용하여 기억하는 함수이다.
+* 다시말해 10개의 인자를 받는 함수가 있는데, 미리 5개의 인자만 받아 기억했다가 나중에 5개의 인자를 받으면 실행 결과를 얻을수 있게 되는 함수이다. 
+* this 우회할때 배웠던 bind 메서드의 실행결과 경우에 따라 부분 적용 함수가 된다. 
 
 ```js
-var add = function(){
-  var result = 0;
-  for( var i = 0 ; i < arguments.length ; i++){
+let add = function(){
+  let result = 0;
+  for( let i = 0 ; i < arguments.length ; i++){
     result += arguments[i];
   }
+  console.log(this); // window
   return result;
 }
 
-var addPartial = add.bind(null, 1, 2, 3, 4, 5); // bind 함수로 저장 
-console.log(addPartial(6, 7, 8, 9, 10)) 
+let addPartial = add.bind(null, 1, 2, 3, 4, 5); // bind 함수로 저장 
+console.log(addPartial(6, 7, 8, 9, 10));
+/*
+ 실행 결과 
+  window
+  55
+*/
 ```
-물론 위와 같은 방법으로 부분적용함수를 구현할 수 있으나, 실무에서 this의 값이 변경되는건 리스크다 크다. 따라서 클로저를 활용하여 this의 값이 변경되지 않도록 구현해보자. 
+> 물론 위와 같은 방법으로 부분적용함수를 구현할 수 있으나, 실무에서 this의 값이 변경되는건 리스크다 크다. 따라서 클로저를 활용하여 this의 값이 변경되지 않도록 구현해보자. 
 
 ```js
-var partial = function(){
+let partial = function(){
   // 인자값 저장
-  var originalPartialArgs = arguments;
+  let originalPartialArgs = arguments;
   // 첫번째 인자는 함수
-  var func = originalPartialArgs[0];
+  let func = originalPartialArgs[0];
   // 인자값 체크
   if(typeof func !== "function"){
     throw new Error('첫번째 인자가 함수가 아닙니다');
@@ -324,15 +331,15 @@ var partial = function(){
   
   return function(){
     // 부분 함수의 인자 값
-    var partialArgs = Array.prototype.slice.call(originalPartialArgs, 1);
+    let partialArgs = Array.prototype.slice.call(originalPartialArgs, 1);
     // 인자 값
-    var restArgs = Array.prototype.slice.call(arguments);
+    let restArgs = Array.prototype.slice.call(arguments);
     // 전달할 인자들을 모아 전달
     return func.apply(this, partialArgs.concat(restArgs));
   }
 }
 
-var add = function(){
+let add = function(){
   let value = 0;
   for( let i = 0 ; i < arguments.length; i++){
     value += arguments[i];
@@ -340,7 +347,7 @@ var add = function(){
   return value;
 }
 
-var addPartial = partial(add, 1,2,3);
+let addPartial = partial(add, 1,2,3);
 console.log(addPartial(4,5));
 ```
 
