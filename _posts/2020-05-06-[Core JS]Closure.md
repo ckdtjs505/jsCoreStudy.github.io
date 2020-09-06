@@ -331,9 +331,9 @@ let partial = function(){
   
   return function(){
     // 부분 함수의 인자 값
-    let partialArgs = Array.prototype.slice.call(originalPartialArgs, 1);
-    // 인자 값
-    let restArgs = Array.prototype.slice.call(arguments);
+    let partialArgs = [ ...originalPartialArgs ].slice(1);
+    // 새로운 인자 값
+    let restArgs = [ ...arguments ];
     // 전달할 인자들을 모아 전달
     return func.apply(this, partialArgs.concat(restArgs));
   }
@@ -350,11 +350,17 @@ let add = function(){
 let addPartial = partial(add, 1,2,3);
 console.log(addPartial(4,5));
 ```
+1. **partial** 함수는 첫번째 인자가 함수인지 아닌지 판별 한후 함수를 반환단다. 
+2. 반환된 함수는 **addPartial**에 할당된다. 
+3. **addPartial**에 인자로 4,5를 전달한다.
+   *  originalPartialArgs(원본 인자값)에 클로저가 발생
+   *  **partial**가 수명이 끝났음에도 클로저로 **originalPartialArgs를** 사용한 값을 할당
+   * 이전 인자와 새로받은 인자를 합친 배열은 실행
 
-부분함수를 사용하기 위한 적합한 예로 디바운스가 있다. 
-디바운스는 동일한 이벤트가 많이 발생한 경우 전부처리하지 않고, 
-마지막에 발생한 이벤트에 대해 한번만 처리한다.
-프론트엔트 최적화에 큰 도움을 주는 기능이다. 
+
+### 넷째. Debounce 
+* 디바운스는 동일한 이벤트가 여러번 발생한 경우 전부처리하지 않고 마지막에 발생한 이벤트에 대해 한번만 처리.
+* 프론트엔트 최적화에 큰 도움을 주는 기능. 
 
 ```js
 let debounce = function (event, func, wait) {
@@ -377,7 +383,7 @@ window.addEventListener('resize', debounce('resize', resizeHandler, 500));
 실전에서 정말 많이 사용되는 함수! 꼭 이해하자 
 
 
-### 넷째. 커링 함수 
+### 다섯째. 커링 함수 
 여러 개의 인자를 받는 함수를 하나의 인자만 받는 함수로 나눠서 순차적으로 실행하게 끔 하는 함수 
 
 커링함수의 의미를 알았지만, 실제적으로 개발단계에서 많이 사용해보지는 않았다.
