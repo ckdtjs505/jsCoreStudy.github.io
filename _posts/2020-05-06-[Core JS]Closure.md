@@ -360,16 +360,17 @@ console.log(addPartial(4,5));
 
 ### 넷째. Debounce 
 * 디바운스는 동일한 이벤트가 여러번 발생한 경우 전부처리하지 않고 마지막에 발생한 이벤트에 대해 한번만 처리.
-* 프론트엔트 최적화에 큰 도움을 주는 기능. 
+* 프론트엔트 최적화에 큰 도움을 주는 기능.
+* 실전에서 정말 많이 사용
 
 ```js
 let debounce = function (event, func, wait) {
   let timeoutId = null;
+  console.log(event, func, wait)
   return function (event) {
-    var self = this;
     console.log(event, 'event 발생');
     clearTimeout(timeoutId);
-    timeoutId = setTimeout(func.bind(self, event), wait);
+    timeoutId = setTimeout(func.bind(this, event), wait);
   };
 };
 
@@ -380,18 +381,19 @@ var resizeHandler = function (e) {
 window.addEventListener('resize', debounce('resize', resizeHandler, 500));
 ```
 
-실전에서 정말 많이 사용되는 함수! 꼭 이해하자 
-
+1. resize 이벤트에 콜백 함수로 debounce를 할당
+2. 이벤트 발생시 debounce 함수를 콜백으로 실행  
+3. 실행한 익명함수에 EVENT 객체를 주입 timeoutId에 할당된 timeOut 제거 
+   * **timeoutId**에 클로저 발생 
+   * debounce 함수가 실행이 끝났음에도 **timeoutId**에 접근  
+4. wait 한 시간만큼 지연 후 func 함수 실행 
 
 ### 다섯째. 커링 함수 
-여러 개의 인자를 받는 함수를 하나의 인자만 받는 함수로 나눠서 순차적으로 실행하게 끔 하는 함수 
-
-커링함수의 의미를 알았지만, 실제적으로 개발단계에서 많이 사용해보지는 않았다.
-굳이 여러개의 인자를 받는 함수를 하나의 인자만 받는 함수로 나눠서 순차적으로 실행할 필요가 있을까? 
-
-물론 책에서는 원하는 시점까지 지연시켰다가 실행하는 것이 요긴한 상황이라면 쓰기에 적합하다고 하지만,
-그러한 경우가 얼마나 있을까? 그러한 경우로 Flux 아키텍처 구현체 중 Redux의 미들웨어에서 사용된다고 한다. 
-아키텍처 공부할 때 유용하게 사용될수 있을꺼 같으니까 일단 개념적으로만이라도 알아두자 
+* 여러 개의 인자를 받는 함수를 하나의 인자만 받는 함수로 나눠서 순차적으로 실행하게 하는 함수 
+* 원하는 시점까지 지연시켰다가 실행하는 것이 요긴한 상황이라면 쓰기에 적합
+  * 실제적으로 개발단계에서 많이 사용해보지는 않았다. 굳이 여러개의 인자를 받는 함수를 하나의 인자만 받는 함수로 나눠서 순차적으로 실행할 필요가 있을까? 
+* 그러한 경우가 얼마나 있을까? 그러한 경우로 Flux 아키텍처 구현체 중 Redux의 미들웨어에서 사용된다고 한다. 
+  * 아키텍처 공부할 때 유용하게 사용될수 있을꺼 같으니까 일단 개념적으로만이라도 알아두자 
 
 
 > 참조 : 코어 자바스크립트 
