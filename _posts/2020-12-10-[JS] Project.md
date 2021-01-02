@@ -1,0 +1,47 @@
+---
+layout: post
+title: '[Electron] import, export 모듈 사용하기'
+date: 2021-01-02
+tags: javascript electron 
+comments: true
+share: true
+related: false
+---
+
+
+### 목표
+* nodeJS에 있는 CommonJS 키워드(require)를 ES6(ES2015) import로 변경   
+* nodeJS애서 ES6를 사용할 수 있도록 Babel 추가 및 빌드  
+
+### 이유
+* `const ... require("")` 이런 구조가 별로 맘에 들지 않음.
+
+### 내용 
+* Electron은 운영 체제(os)작업을 위해서 Node로 동작 
+* Electron은 웹 콘텐츠를 표시하기 위해 Chromium기반 동작 
+* Node에선 ES6 지원 되지 않음 
+* Babel을 이용하여 ES6 파일을 빌드 후 빌드된 파일을 실행 
+
+1. Babel 설치 
+```
+ npm install --save-dev @babel/cli @babel/core @babel/preset-env
+```
+
+2. Babel 빌드 
+```
+package.json 
+...
+
+  "scripts": {
+    "start": "babel src --out-dir build -s inline && electron .",
+    "build:win64": "electron-builder --win --x64"
+  },
+
+... 
+```
+> babel로 빌드 후 build 파일에 저장 후 electron으로 실행 
+
+
+### 결론
+* .ts로 하면 자동으로 import 를 사용할 수 있다고 했으나... 잘되지 않음
+* node에서 js를 실행하기에 babel로 ES6를 지원하도록 빌드하여 해결 
